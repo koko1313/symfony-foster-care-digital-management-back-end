@@ -24,11 +24,24 @@ class LoginController extends AbstractController {
             if($user["email"] == $req->get("email") && $user["password"] == $req->get("password")) {
                 $response->setData($user);
                 $response->setStatusCode(Response::HTTP_OK);
-                return $response;
+                return $response; // return logged user and status 200
             }
         }
 
-        $response->setStatusCode(Response::HTTP_NOT_FOUND);
+        $response->setStatusCode(Response::HTTP_UNAUTHORIZED);
+        return $response; // return {} and status 401
+    }
+
+    /**
+     * @Route("/logout", methods={"POST"})
+     */
+    public function logout() {
+        $response = new JsonResponse();
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+
+        // do some logout logic ...
+
+        $response->setStatusCode(Response::HTTP_OK);
         return $response;
     }
 
