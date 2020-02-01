@@ -9,7 +9,33 @@ use Symfony\Component\HttpFoundation\Response;
 use App\HardcoredData\HardcoredUsers;
 use Symfony\Component\Routing\Annotation\Route;
 
+use Dompdf\Dompdf;
+
 class LoginController extends AbstractController {
+
+    /**
+     * @Route("/pdf", methods={"GET"})
+     */
+    public function pdf() {
+        $dompdf = new Dompdf();
+
+        $html = $this->renderView('DocumentTemplates/ExampleDocument.html.twig', [
+            'title' => "Welcome to our PDF Test"
+        ]);
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        $output = $dompdf->output();
+
+        $publicDirectory = $this->getParameter('kernel.project_dir') . '/public/documents';
+        $pdfFilepath =  $publicDirectory . '/mypdf.pdf';
+
+        file_put_contents($pdfFilepath, $output);
+
+        return new JsonResponse(null, 200);
+    }
+
 
     /**
      * @Route("/login", methods={"POST"})
