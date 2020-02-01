@@ -16,7 +16,6 @@ class LoginController extends AbstractController {
      */
     public function login(Request $req) {
         $response = new JsonResponse();
-        $response->headers->set('Access-Control-Allow-Origin', '*');
 
         $allUsers = HardcoredUsers::getAll();
 
@@ -37,7 +36,6 @@ class LoginController extends AbstractController {
      */
     public function logout() {
         $response = new JsonResponse();
-        $response->headers->set('Access-Control-Allow-Origin', '*');
 
         // do some logout logic ...
 
