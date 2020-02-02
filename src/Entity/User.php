@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use mysql_xdevapi\Collection;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -24,12 +23,11 @@ class User implements UserInterface
     private $email;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Role", inversedBy="users")
+     * @ORM\Column(type="json")
      */
     private $roles = [];
 
     /**
-     * @var string The hashed password
      * @ORM\Column(type="string")
      */
     private $password;
@@ -40,81 +38,46 @@ class User implements UserInterface
 
 
 
-    public function getId(): ?int
-    {
+    public function getId() {
         return $this->id;
     }
 
-    public function getEmail(): ?string
-    {
+    public function getEmail() {
         return $this->email;
     }
 
-    public function setEmail(string $email): self
-    {
+    public function setEmail(string $email) {
         $this->email = $email;
-
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
-    public function getUsername(): string
-    {
+    public function getUsername() {
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
-    public function getRoles(): array
-    {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        // $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
+    public function getRoles() {
+        return array_unique($this->roles);
     }
 
-    public function addRole(Role $role): self
-    {
-        array_push($this->roles, $role);
-
+    public function setRoles(array $roles) {
+        $this->roles = $roles;
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
-    public function getPassword(): string
-    {
+    public function getPassword() {
         return (string) $this->password;
     }
 
-    public function setPassword(string $password): self
-    {
+    public function setPassword(string $password) {
         $this->password = $password;
-
         return $this;
     }
 
-    /**
-     * @see UserInterface
-     */
-    public function getSalt()
-    {
+    public function getSalt() {
         // not needed when using the "bcrypt" algorithm in security.yaml
     }
 
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials()
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+    public function eraseCredentials() {
+
     }
 }
