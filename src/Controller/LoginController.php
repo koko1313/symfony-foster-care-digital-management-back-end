@@ -2,16 +2,27 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\HardcoredData\HardcoredUsers;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 use Dompdf\Dompdf;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class LoginController extends AbstractController {
+
+    /**
+     * @Route("/protected-test", methods={"GET", "POST"})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function sad() {
+        return new Response("assda");
+    }
 
     /**
      * @Route("/pdf", methods={"GET"})
@@ -36,6 +47,15 @@ class LoginController extends AbstractController {
         return new JsonResponse(null, 200);
     }
 
+    // ####################################################
+
+    private $encoder;
+
+    public function __construct(UserPasswordEncoderInterface $encoder)
+    {
+        $this->encoder = $encoder;
+    }
+
 
     /**
      * @Route("/login", methods={"POST"})
@@ -43,11 +63,20 @@ class LoginController extends AbstractController {
     public function login(Request $req) {
         $response = new JsonResponse();
 
-        $allUsers = HardcoredUsers::getAll();
+        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(["email" => $req->get("email")]);
 
-        foreach ($allUsers as $user) {
-            if($user["email"] == $req->get("email") && $user["password"] == $req->get("password")) {
-                $response->setData($user);
+        if($user) {
+            if($req->get("password") && $this->encoder->isPasswordValid($user, $req->get("password"))) {
+                // Manually authenticate user in controller
+                $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+                $this->get('security.token_storage')->setToken($token);
+                $this->get('session')->set('_security_main', serialize($token));
+
+                $response->setData([
+                    "email" => $user->getEmail(),
+                    "roles" => $user->getRoles(),
+                ]);
+
                 $response->setStatusCode(Response::HTTP_OK);
                 return $response; // return logged user and status 200
             }
@@ -57,13 +86,15 @@ class LoginController extends AbstractController {
         return $response; // return {} and status 401
     }
 
+
     /**
      * @Route("/logout", methods={"POST"})
      */
     public function logout() {
         $response = new JsonResponse();
 
-        // do some logout logic ...
+        $this->get('security.token_storage')->setToken(null);
+        $this->get('session')->invalidate();
 
         $response->setStatusCode(Response::HTTP_OK);
         return $response;
