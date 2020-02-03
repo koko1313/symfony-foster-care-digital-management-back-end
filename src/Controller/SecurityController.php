@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 class SecurityController extends AbstractController {
 
@@ -28,8 +28,6 @@ class SecurityController extends AbstractController {
      * @Route("/login", methods={"POST"})
      */
     public function login(Request $req) {
-        $response = new JsonResponse();
-
         $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(["email" => $req->get("email")]);
 
         if($user) {
@@ -39,18 +37,14 @@ class SecurityController extends AbstractController {
                 $this->get('security.token_storage')->setToken($token);
                 $this->get('session')->set('_security_main', serialize($token));
 
-                $response->setData([
-                    "email" => $user->getEmail(),
-                    "roles" => $user->getRoles(),
-                ]);
+                $serializer = $this->container->get('serializer');
+                $userJson = $serializer->serialize($user, 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['password']]);
 
-                $response->setStatusCode(Response::HTTP_OK);
-                return $response; // return logged user and status 200
+                return new Response($userJson);
             }
         }
 
-        $response->setStatusCode(Response::HTTP_UNAUTHORIZED);
-        return $response; // return {} and status 401
+        return new Response(null, Response::HTTP_UNAUTHORIZED);
     }
 
 
@@ -58,26 +52,35 @@ class SecurityController extends AbstractController {
      * @Route("/user/logged", methods={"GET"})
      */
     public function getLoggedUser(Request $req) {
-        $response = new JsonResponse();
 
         $user = $this->getUser();
 
         if($user) {
-            $response->setData([
-                "email" => $user->getEmail(),
-                "roles" => $user->getRoles(),
-            ]);
+            $serializer = $this->container->get('serializer');
+            $userJson = $serializer->serialize($user, 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['password']]);
 
-            $response->setStatusCode(Response::HTTP_OK);
-            return $response;
+            return new Response($userJson);
         }
 
-        $response->setStatusCode(Response::HTTP_UNAUTHORIZED);
-        return $response; // return {} and status 401
+        return new Response(null, Response::HTTP_UNAUTHORIZED); // return {} and status 401
     }
 
 
     /**
+     * @IsGranted("ROLE_ADMIN")
+     * @Route("/user/all", methods={"GET"})
+     */
+    public function getAllUsers() {
+        $allUsers = $this->getDoctrine()->getRepository(User::class)->findAll();
+
+        $serializer = $this->container->get('serializer');
+        $allUsersJson = $serializer->serialize($allUsers, 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['password']]);
+
+        return new Response($allUsersJson);
+    }
+
+    /**
+     * @IsGranted("ROLE_ADMIN")
      * @Route("/register", methods={"POST"})
      */
     public function register(Request $req, EntityManagerInterface $entityManager) {
@@ -91,12 +94,9 @@ class SecurityController extends AbstractController {
         $subRegion = $req->get("subRegion");
         $city = $req->get("city");
 
-        $response = new JsonResponse();
-
         $userWithThisEmail = $this->getDoctrine()->getRepository(User::class)->findOneBy(["email" => $email]);
         if($userWithThisEmail) {
-            $response->setStatusCode(Response::HTTP_CONFLICT);
-            return $response;
+            return new Response(null, Response::HTTP_CONFLICT);
         }
 
         $user = new User();
@@ -118,7 +118,7 @@ class SecurityController extends AbstractController {
 
         $entityManager->flush();
 
-        return $response;
+        return new Response($user);
     }
 
 
@@ -126,13 +126,10 @@ class SecurityController extends AbstractController {
      * @Route("/logout", methods={"POST"})
      */
     public function logout() {
-        $response = new JsonResponse();
-
         $this->get('security.token_storage')->setToken(null);
         $this->get('session')->invalidate();
 
-        $response->setStatusCode(Response::HTTP_OK);
-        return $response;
+        return new Response();
     }
 
 }
