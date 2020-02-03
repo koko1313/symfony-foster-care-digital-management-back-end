@@ -23,6 +23,36 @@ class User implements UserInterface
     private $email;
 
     /**
+     * @ORM\Column(type="string", length=50)
+     */
+    private $firstName;
+
+    /**
+     * @ORM\Column(type="string", length=50)
+     */
+    private $secondName;
+
+    /**
+     * @ORM\Column(type="string", length=50)
+     */
+    private $lastName;
+
+    /**
+     * @ORM\Column(type="string", length=80)
+     */
+    private $region;
+
+    /**
+     * @ORM\Column(type="string", length=80)
+     */
+    private $subRegion;
+
+    /**
+     * @ORM\Column(type="string", length=80)
+     */
+    private $city;
+
+    /**
      * @ORM\Column(type="json")
      */
     private $roles = [];
@@ -79,5 +109,53 @@ class User implements UserInterface
 
     public function eraseCredentials() {
 
+    }
+
+    public function getFirstName() {
+        return $this->firstName;
+    }
+
+    public function setFirstName($firstName) {
+        $this->firstName = $firstName;
+    }
+
+    public function getSecondName() {
+        return $this->secondName;
+    }
+
+    public function setSecondName($secondName) {
+        $this->secondName = $secondName;
+    }
+
+    public function getLastName() {
+        return $this->lastName;
+    }
+
+    public function setLastName($lastName) {
+        $this->lastName = $lastName;
+    }
+
+    public function getRegion() {
+        return $this->region;
+    }
+
+    public function setRegion($region) {
+        $this->region = $region;
+    }
+
+    public function getSubRegion() {
+        return $this->subRegion;
+    }
+
+    public function setSubRegion($subRegion) {
+        $this->subRegion = $subRegion;
+    }
+
+    public function getCity() {
+        return $this->city;
+    }
+
+    public function setCity($city) {
+        $this->city = $city;
     }
 }
