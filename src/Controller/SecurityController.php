@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,6 +50,39 @@ class SecurityController extends AbstractController {
 
         $response->setStatusCode(Response::HTTP_UNAUTHORIZED);
         return $response; // return {} and status 401
+    }
+
+
+    /**
+     * @Route("/register", methods={"POST"})
+     */
+    public function register(Request $req, EntityManagerInterface $entityManager) {
+        $email = $req->get("email");
+        $password = $req->get("password");
+        $roles = explode(",", $req->get("roles"));
+
+        $response = new JsonResponse();
+
+        $user = new User();
+        $user->setEmail($email);
+
+        $encodedPassword = $this->encoder->encodePassword($user, $password);
+        $user->setPassword($encodedPassword);
+
+        $user->setRoles($roles);
+
+        $user->setFirstName("");
+        $user->setSecondName("");
+        $user->setLastName("");
+        $user->setRegion("");
+        $user->setSubRegion("");
+        $user->setCity("");
+
+        $entityManager->persist($user);
+
+        $entityManager->flush();
+
+        return $response;
     }
 
 
