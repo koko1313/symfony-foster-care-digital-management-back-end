@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -54,14 +55,49 @@ class SecurityController extends AbstractController {
 
 
     /**
+     * @Route("/user/logged", methods={"GET"})
+     */
+    public function getLoggedUser(Request $req) {
+        $response = new JsonResponse();
+
+        $user = $this->getUser();
+
+        if($user) {
+            $response->setData([
+                "email" => $user->getEmail(),
+                "roles" => $user->getRoles(),
+            ]);
+
+            $response->setStatusCode(Response::HTTP_OK);
+            return $response;
+        }
+
+        $response->setStatusCode(Response::HTTP_UNAUTHORIZED);
+        return $response; // return {} and status 401
+    }
+
+
+    /**
      * @Route("/register", methods={"POST"})
      */
     public function register(Request $req, EntityManagerInterface $entityManager) {
         $email = $req->get("email");
         $password = $req->get("password");
-        $roles = explode(",", $req->get("roles"));
+        $roles = $req->get("roles");
+        $firstName = $req->get("firstName");
+        $secondName = $req->get("secondName");
+        $lastName = $req->get("lastName");
+        $region = $req->get("region");
+        $subRegion = $req->get("subRegion");
+        $city = $req->get("city");
 
         $response = new JsonResponse();
+
+        $userWithThisEmail = $this->getDoctrine()->getRepository(User::class)->findOneBy(["email" => $email]);
+        if($userWithThisEmail) {
+            $response->setStatusCode(Response::HTTP_CONFLICT);
+            return $response;
+        }
 
         $user = new User();
         $user->setEmail($email);
@@ -71,12 +107,12 @@ class SecurityController extends AbstractController {
 
         $user->setRoles($roles);
 
-        $user->setFirstName("");
-        $user->setSecondName("");
-        $user->setLastName("");
-        $user->setRegion("");
-        $user->setSubRegion("");
-        $user->setCity("");
+        $user->setFirstName($firstName);
+        $user->setSecondName($secondName);
+        $user->setLastName($lastName);
+        $user->setRegion($region);
+        $user->setSubRegion($subRegion);
+        $user->setCity($city);
 
         $entityManager->persist($user);
 
