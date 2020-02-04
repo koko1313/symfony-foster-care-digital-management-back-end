@@ -5,9 +5,11 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\RegionRepository")
+ * @JMS\ExclusionPolicy("none")
  */
 class Region {
 
@@ -24,11 +26,13 @@ class Region {
     private $name;
 
     /**
+     * @JMS\Exclude()
      * @ORM\OneToMany(targetEntity="App\Entity\SubRegion", mappedBy="region")
      */
     private $subRegions;
 
     /**
+     * @JMS\Exclude()
      * @ORM\OneToMany(targetEntity="App\Entity\City", mappedBy="region")
      */
     private $cities;

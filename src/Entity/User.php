@@ -3,10 +3,12 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @JMS\ExclusionPolicy("none")
  */
 class User implements UserInterface
 {
@@ -64,6 +66,7 @@ class User implements UserInterface
     private $roles = [];
 
     /**
+     * @JMS\Exclude()
      * @ORM\Column(type="string")
      */
     private $password;

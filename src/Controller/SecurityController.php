@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,14 +13,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 class SecurityController extends AbstractController {
 
     private $encoder;
 
-    public function __construct(UserPasswordEncoderInterface $encoder)
-    {
+    public function __construct(UserPasswordEncoderInterface $encoder) {
         $this->encoder = $encoder;
     }
 
@@ -27,7 +26,7 @@ class SecurityController extends AbstractController {
     /**
      * @Route("/login", methods={"POST"})
      */
-    public function login(Request $req) {
+    public function login(Request $req, SerializerInterface $serializer) {
         $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(["email" => $req->get("email")]);
 
         if($user) {
@@ -37,8 +36,7 @@ class SecurityController extends AbstractController {
                 $this->get('security.token_storage')->setToken($token);
                 $this->get('session')->set('_security_main', serialize($token));
 
-                $serializer = $this->container->get('serializer');
-                $userJson = $serializer->serialize($user, 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['password']]);
+                $userJson = $serializer->serialize($user, 'json');
 
                 return new Response($userJson);
             }
@@ -51,13 +49,12 @@ class SecurityController extends AbstractController {
     /**
      * @Route("/user/logged", methods={"GET"})
      */
-    public function getLoggedUser(Request $req) {
+    public function getLoggedUser(Request $req, SerializerInterface $serializer) {
 
         $user = $this->getUser();
 
         if($user) {
-            $serializer = $this->container->get('serializer');
-            $userJson = $serializer->serialize($user, 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['password']]);
+            $userJson = $serializer->serialize($user, 'json');
 
             return new Response($userJson);
         }
@@ -67,21 +64,20 @@ class SecurityController extends AbstractController {
 
 
     /**
-     * @IsGranted("ROLE_ADMIN")
      * @Route("/user/all", methods={"GET"})
+     * @IsGranted("ROLE_ADMIN")
      */
-    public function getAllUsers() {
+    public function getAllUsers(SerializerInterface $serializer) {
         $allUsers = $this->getDoctrine()->getRepository(User::class)->findAll();
 
-        $serializer = $this->container->get('serializer');
-        $allUsersJson = $serializer->serialize($allUsers, 'json', [AbstractNormalizer::IGNORED_ATTRIBUTES => ['password']]);
+        $allUsersJson = $serializer->serialize($allUsers, 'json');
 
         return new Response($allUsersJson);
     }
 
     /**
-     * @IsGranted("ROLE_ADMIN")
      * @Route("/register", methods={"POST"})
+     * @IsGranted("ROLE_ADMIN")
      */
     public function register(Request $req, EntityManagerInterface $entityManager) {
         $email = $req->get("email");

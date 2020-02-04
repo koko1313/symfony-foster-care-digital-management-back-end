@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CityRepository")
@@ -33,42 +34,35 @@ class City
      */
     private $region;
 
-    public function getId(): ?int
-    {
+    public function getId() {
         return $this->id;
     }
 
-    public function getName(): ?string
-    {
+    public function getName() {
         return $this->name;
     }
 
-    public function setName(string $name): self
-    {
+    public function setName(string $name) {
         $this->name = $name;
 
         return $this;
     }
 
-    public function getSubRegion(): ?SubRegion
-    {
+    public function getSubRegion() {
         return $this->subRegion;
     }
 
-    public function setSubRegion(?SubRegion $subRegion): self
-    {
+    public function setSubRegion(?SubRegion $subRegion) {
         $this->subRegion = $subRegion;
 
         return $this;
     }
 
-    public function getRegion(): ?Region
-    {
+    public function getRegion() {
         return $this->region;
     }
 
-    public function setRegion(?Region $region): self
-    {
+    public function setRegion(?Region $region) {
         $this->region = $region;
 
         return $this;
