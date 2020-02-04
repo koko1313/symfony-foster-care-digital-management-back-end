@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -61,15 +63,19 @@ class User implements UserInterface
     private $position;
 
     /**
-     * @ORM\Column(type="json")
-     */
-    private $roles = [];
-
-    /**
      * @JMS\Exclude()
      * @ORM\Column(type="string")
      */
     private $password;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Role")
+     */
+    private $roles;
+
+    public function __construct() {
+        $this->roles = new ArrayCollection();
+    }
 
 
 
@@ -92,15 +98,6 @@ class User implements UserInterface
 
     public function getUsername() {
         return (string) $this->email;
-    }
-
-    public function getRoles() {
-        return array_unique($this->roles);
-    }
-
-    public function setRoles(array $roles) {
-        $this->roles = $roles;
-        return $this;
     }
 
     public function getPassword() {
@@ -174,5 +171,32 @@ class User implements UserInterface
 
     public function setCity($city) {
         $this->city = $city;
+    }
+
+    // overrided to return roles as array of them names
+    public function getRoles() {
+        $rolesNames = [];
+
+        foreach ($this->roles as $role) {
+            array_push($rolesNames, $role->getName());
+        }
+
+        return $rolesNames;
+    }
+
+    public function addRole(Role $role) {
+        if (!$this->roles->contains($role)) {
+            $this->roles[] = $role;
+        }
+
+        return $this;
+    }
+
+    public function removeRole(Role $role) {
+        if ($this->roles->contains($role)) {
+            $this->roles->removeElement($role);
+        }
+
+        return $this;
     }
 }

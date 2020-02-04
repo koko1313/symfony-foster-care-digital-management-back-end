@@ -3,12 +3,12 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
-use App\ENUM\Roles;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class UserFixtures extends Fixture {
+class UserFixtures extends Fixture implements DependentFixtureInterface {
     private $encoder;
 
     public function __construct(UserPasswordEncoderInterface $encoder) {
@@ -22,7 +22,7 @@ class UserFixtures extends Fixture {
         $password = $this->encoder->encodePassword($user, "pass");
         $user->setPassword($password);
 
-        $user->setRoles([Roles::ROLE_ADMIN]);
+        $user->addRole($this->getReference(RoleFixtures::ROLE_ADMIN_REFERENCE));
 
         $user->setFirstName("");
         $user->setSecondName("");
@@ -34,5 +34,11 @@ class UserFixtures extends Fixture {
         $manager->persist($user);
 
         $manager->flush();
+    }
+
+    public function getDependencies() {
+        return array(
+            RoleFixtures::class,
+        );
     }
 }

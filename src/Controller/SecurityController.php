@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Position;
+use App\Entity\Role;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +29,7 @@ class SecurityController extends AbstractController {
     /**
      * @Route("/login", methods={"POST"})
      */
-    public function login(Request $req, SerializerInterface $serializer) {
+    public function login(Request $req, SerializerInterface $serializer, LoggerInterface $logger) {
         $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(["email" => $req->get("email")]);
 
         if($user) {
@@ -45,44 +48,14 @@ class SecurityController extends AbstractController {
         return new Response(null, Response::HTTP_UNAUTHORIZED);
     }
 
-
-    /**
-     * @Route("/user/logged", methods={"GET"})
-     */
-    public function getLoggedUser(Request $req, SerializerInterface $serializer) {
-
-        $user = $this->getUser();
-
-        if($user) {
-            $userJson = $serializer->serialize($user, 'json');
-
-            return new Response($userJson);
-        }
-
-        return new Response(null, Response::HTTP_UNAUTHORIZED); // return {} and status 401
-    }
-
-
-    /**
-     * @Route("/user/all", methods={"GET"})
-     * @IsGranted("ROLE_ADMIN")
-     */
-    public function getAllUsers(SerializerInterface $serializer) {
-        $allUsers = $this->getDoctrine()->getRepository(User::class)->findAll();
-
-        $allUsersJson = $serializer->serialize($allUsers, 'json');
-
-        return new Response($allUsersJson);
-    }
-
     /**
      * @Route("/register", methods={"POST"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function register(Request $req, EntityManagerInterface $entityManager) {
+    public function register(Request $req, EntityManagerInterface $entityManager, SerializerInterface $serializer) {
         $email = $req->get("email");
         $password = $req->get("password");
-        $roles = $req->get("roles");
+        $positionId = $req->get("positionId");
         $firstName = $req->get("firstName");
         $secondName = $req->get("secondName");
         $lastName = $req->get("lastName");
@@ -101,7 +74,12 @@ class SecurityController extends AbstractController {
         $encodedPassword = $this->encoder->encodePassword($user, $password);
         $user->setPassword($encodedPassword);
 
-        $user->setRoles($roles);
+        $position = $this->getDoctrine()->getRepository(Position::class)->findOneBy(["id" => $positionId]);
+        $user->setPosition($position);
+
+        $role = $this->getDoctrine()->getRepository(Role::class)->findOneBy(["id" => $position->getRole()]);
+        $user->addRole($role);
+
 
         $user->setFirstName($firstName);
         $user->setSecondName($secondName);
@@ -114,7 +92,8 @@ class SecurityController extends AbstractController {
 
         $entityManager->flush();
 
-        return new Response($user);
+        $userJson = $serializer->serialize($user, 'json');
+        return new Response($userJson);
     }
 
 
