@@ -155,6 +155,9 @@
             "./config/packages/prod/jms_serializer.yaml"
         ]
     },
+    "monolog/monolog": {
+        "version": "2.0.2"
+    },
     "nelmio/cors-bundle": {
         "version": "1.5",
         "recipe": {
@@ -310,6 +313,23 @@
     },
     "symfony/mime": {
         "version": "v5.0.3"
+    },
+    "symfony/monolog-bridge": {
+        "version": "v5.0.4"
+    },
+    "symfony/monolog-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "5f5bdd0f0bd94eedc40ebf637d3c9fe9e48c9689"
+        },
+        "files": [
+            "./config/packages/dev/monolog.yaml",
+            "./config/packages/prod/monolog.yaml",
+            "./config/packages/test/monolog.yaml"
+        ]
     },
     "symfony/orm-pack": {
         "version": "v1.0.7"
