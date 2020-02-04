@@ -53,6 +53,12 @@ class User implements UserInterface
     private $city;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Position")
+     * @ORM\JoinColumn(name="position_id", referencedColumnName="id")
+     */
+    private $position;
+
+    /**
      * @ORM\Column(type="json")
      */
     private $roles = [];
@@ -133,6 +139,14 @@ class User implements UserInterface
 
     public function setLastName($lastName) {
         $this->lastName = $lastName;
+    }
+
+    public function getPosition() {
+        return $this->position;
+    }
+
+    public function setPosition($position) {
+        $this->position = $position;
     }
 
     public function getRegion() {
