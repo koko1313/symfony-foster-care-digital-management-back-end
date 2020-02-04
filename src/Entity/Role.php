@@ -5,10 +5,10 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\PositionRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\RoleRepository")
  */
-class Position
-{
+class Role {
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -21,12 +21,6 @@ class Position
      */
     private $name;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Role")
-     * @ORM\JoinColumn(name="role_id", referencedColumnName="id")
-     */
-    private $role;
-
     public function getId() {
         return $this->id;
     }
@@ -38,13 +32,5 @@ class Position
     public function setName(string $name) {
         $this->name = $name;
         return $this;
-    }
-
-    public function getRole() {
-        return $this->role;
-    }
-
-    public function setRole($role) {
-        $this->role = $role;
     }
 }
