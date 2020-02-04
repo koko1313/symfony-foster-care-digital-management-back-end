@@ -20,7 +20,7 @@ class ChildrenController extends AbstractController {
                 "first_name" => "Иван",
                 "second_name" => "Иванов",
                 "last_name" => "Иванов",
-                "sex" => "m",
+                "gender" => "m",
                 "region" => "Монтана",
                 "municipality" => "Лом",
                 "current_location" => "Брусарци"
@@ -30,7 +30,7 @@ class ChildrenController extends AbstractController {
                 "first_name" => "Иван",
                 "second_name" => "Иванов",
                 "last_name" => "Иванов",
-                "sex" => "m",
+                "gender" => "m",
                 "region" => "Монтана",
                 "municipality" => "Лом",
                 "current_location" => "Брусарци"
