@@ -37,8 +37,14 @@ class SubRegion {
      */
     private $cities;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="subRegion")
+     */
+    private $users;
+
     public function __construct() {
         $this->cities = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId() {
@@ -88,6 +94,37 @@ class SubRegion {
             // set the owning side to null (unless already changed)
             if ($city->getSubRegion() === $this) {
                 $city->setSubRegion(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->setSubRegion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->contains($user)) {
+            $this->users->removeElement($user);
+            // set the owning side to null (unless already changed)
+            if ($user->getSubRegion() === $this) {
+                $user->setSubRegion(null);
             }
         }
 

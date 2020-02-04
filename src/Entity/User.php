@@ -42,17 +42,17 @@ class User implements UserInterface
     private $lastName;
 
     /**
-     * @ORM\Column(type="string", length=80)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Region", inversedBy="users")
      */
     private $region;
 
     /**
-     * @ORM\Column(type="string", length=80)
+     * @ORM\ManyToOne(targetEntity="App\Entity\SubRegion", inversedBy="users")
      */
     private $subRegion;
 
     /**
-     * @ORM\Column(type="string", length=80)
+     * @ORM\ManyToOne(targetEntity="App\Entity\City", inversedBy="users")
      */
     private $city;
 
@@ -149,30 +149,6 @@ class User implements UserInterface
         $this->position = $position;
     }
 
-    public function getRegion() {
-        return $this->region;
-    }
-
-    public function setRegion($region) {
-        $this->region = $region;
-    }
-
-    public function getSubRegion() {
-        return $this->subRegion;
-    }
-
-    public function setSubRegion($subRegion) {
-        $this->subRegion = $subRegion;
-    }
-
-    public function getCity() {
-        return $this->city;
-    }
-
-    public function setCity($city) {
-        $this->city = $city;
-    }
-
     // overrided to return roles as array of them names
     public function getRoles() {
         $rolesNames = [];
@@ -197,6 +173,33 @@ class User implements UserInterface
             $this->roles->removeElement($role);
         }
 
+        return $this;
+    }
+
+    public function getRegion() {
+        return $this->region;
+    }
+
+    public function setRegion(?Region $region) {
+        $this->region = $region;
+        return $this;
+    }
+
+    public function getSubRegion() {
+        return $this->subRegion;
+    }
+
+    public function setSubRegion(?SubRegion $subRegion) {
+        $this->subRegion = $subRegion;
+        return $this;
+    }
+
+    public function getCity() {
+        return $this->city;
+    }
+
+    public function setCity(?City $city) {
+        $this->city = $city;
         return $this;
     }
 }

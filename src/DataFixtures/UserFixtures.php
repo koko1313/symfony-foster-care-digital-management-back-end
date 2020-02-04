@@ -27,9 +27,6 @@ class UserFixtures extends Fixture implements DependentFixtureInterface {
         $user->setFirstName("");
         $user->setSecondName("");
         $user->setLastName("");
-        $user->setRegion("");
-        $user->setSubRegion("");
-        $user->setCity("");
 
         $manager->persist($user);
 

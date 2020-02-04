@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\City;
 use App\Entity\Position;
+use App\Entity\Region;
 use App\Entity\Role;
+use App\Entity\SubRegion;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializerInterface;
@@ -59,9 +62,9 @@ class SecurityController extends AbstractController {
         $firstName = $req->get("firstName");
         $secondName = $req->get("secondName");
         $lastName = $req->get("lastName");
-        $region = $req->get("region");
-        $subRegion = $req->get("subRegion");
-        $city = $req->get("city");
+        $regionId = $req->get("regionId");
+        $subRegionId = $req->get("subRegionId");
+        $cityId = $req->get("cityId");
 
         $userWithThisEmail = $this->getDoctrine()->getRepository(User::class)->findOneBy(["email" => $email]);
         if($userWithThisEmail) {
@@ -84,8 +87,14 @@ class SecurityController extends AbstractController {
         $user->setFirstName($firstName);
         $user->setSecondName($secondName);
         $user->setLastName($lastName);
+
+        $region = $this->getDoctrine()->getRepository(Region::class)->findOneBy(["id" => $regionId]);
         $user->setRegion($region);
+
+        $subRegion = $this->getDoctrine()->getRepository(SubRegion::class)->findOneBy(["id" => $subRegionId]);
         $user->setSubRegion($subRegion);
+
+        $city = $this->getDoctrine()->getRepository(City::class)->findOneBy(["id" => $cityId]);
         $user->setCity($city);
 
         $entityManager->persist($user);
