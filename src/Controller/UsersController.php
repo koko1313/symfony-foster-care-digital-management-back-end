@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\City;
+use App\Entity\Region;
+use App\Entity\SubRegion;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializationContext;
@@ -42,6 +45,43 @@ class UsersController extends AbstractController {
         $allUsersJson = $serializer->serialize($allUsers, 'json', $context);
 
         return new Response($allUsersJson);
+    }
+
+
+    /**
+     * @Route("/user/update", methods={"PUT"})
+     */
+    public function update(Request $req, EntityManagerInterface $entityManager, SerializerInterface $serializer) {
+        $userId = $req->get("userId");
+        $email = $req->get("email");
+        $firstName = $req->get("firstName");
+        $secondName = $req->get("secondName");
+        $lastName = $req->get("lastName");
+        $regionId = $req->get("regionId");
+        $subRegionId = $req->get("subRegionId");
+        $cityId = $req->get("cityId");
+
+        $user = $entityManager->getRepository(User::class)->find($userId);
+
+        $user->setEmail($email);
+        $user->setFirstName($firstName);
+        $user->setSecondName($secondName);
+        $user->setLastName($lastName);
+
+        $region = $entityManager->getRepository(Region::class)->find($regionId);
+        $user->setRegion($region);
+
+        $subRegion = $entityManager->getRepository(SubRegion::class)->find($subRegionId);
+        $user->setSubRegion($subRegion);
+
+        $city = $entityManager->getRepository(City::class)->find($cityId);
+        $user->setCity($city);
+
+        $entityManager->flush();
+
+        $userSerialized = $serializer->serialize($user, 'json');
+
+        return new Response($userSerialized);
     }
 
 
