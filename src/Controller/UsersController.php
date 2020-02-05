@@ -63,6 +63,10 @@ class UsersController extends AbstractController {
 
         $user = $entityManager->getRepository(User::class)->find($userId);
 
+        if(!$user) {
+            return new Response(null, Response::HTTP_NOT_FOUND);
+        }
+
         $user->setEmail($email);
         $user->setFirstName($firstName);
         $user->setSecondName($secondName);

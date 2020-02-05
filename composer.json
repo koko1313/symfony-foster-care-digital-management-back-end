@@ -5,6 +5,7 @@
         "php": "^7.2.5",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "doctrine/annotations": "^1.8",
         "dompdf/dompdf": "^0.8.4",
         "jms/serializer-bundle": "^3.5",
         "nelmio/cors-bundle": "^2.0",

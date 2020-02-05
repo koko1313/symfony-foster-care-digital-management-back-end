@@ -66,7 +66,12 @@ class SecurityController extends AbstractController {
         $subRegionId = $req->get("subRegionId");
         $cityId = $req->get("cityId");
 
+        if($this->checkEmptyFields([$email, $password, $positionId, $firstName, $secondName, $lastName, $regionId, $subRegionId, $cityId])) {
+            return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
+        }
+
         $userWithThisEmail = $entityManager->getRepository(User::class)->findOneBy(["email" => $email]);
+
         if($userWithThisEmail) {
             return new Response(null, Response::HTTP_CONFLICT);
         }
@@ -114,6 +119,16 @@ class SecurityController extends AbstractController {
         $this->get('session')->invalidate();
 
         return new Response();
+    }
+
+
+    private function checkEmptyFields($fields) {
+        foreach ($fields as $field) {
+            if($field == null) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
