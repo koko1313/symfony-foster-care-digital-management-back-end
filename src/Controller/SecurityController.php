@@ -32,8 +32,8 @@ class SecurityController extends AbstractController {
     /**
      * @Route("/login", methods={"POST"})
      */
-    public function login(Request $req, SerializerInterface $serializer, LoggerInterface $logger) {
-        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(["email" => $req->get("email")]);
+    public function login(Request $req, SerializerInterface $serializer, EntityManagerInterface $entityManager) {
+        $user = $entityManager->getRepository(User::class)->findOneBy(["email" => $req->get("email")]);
 
         if($user) {
             if($req->get("password") && $this->encoder->isPasswordValid($user, $req->get("password"))) {
@@ -66,7 +66,7 @@ class SecurityController extends AbstractController {
         $subRegionId = $req->get("subRegionId");
         $cityId = $req->get("cityId");
 
-        $userWithThisEmail = $this->getDoctrine()->getRepository(User::class)->findOneBy(["email" => $email]);
+        $userWithThisEmail = $entityManager->getRepository(User::class)->findOneBy(["email" => $email]);
         if($userWithThisEmail) {
             return new Response(null, Response::HTTP_CONFLICT);
         }
@@ -77,10 +77,10 @@ class SecurityController extends AbstractController {
         $encodedPassword = $this->encoder->encodePassword($user, $password);
         $user->setPassword($encodedPassword);
 
-        $position = $this->getDoctrine()->getRepository(Position::class)->findOneBy(["id" => $positionId]);
+        $position = $entityManager->getRepository(Position::class)->findOneBy(["id" => $positionId]);
         $user->setPosition($position);
 
-        $role = $this->getDoctrine()->getRepository(Role::class)->findOneBy(["id" => $position->getRole()]);
+        $role = $entityManager->getRepository(Role::class)->findOneBy(["id" => $position->getRole()]);
         $user->addRole($role);
 
 
@@ -88,13 +88,13 @@ class SecurityController extends AbstractController {
         $user->setSecondName($secondName);
         $user->setLastName($lastName);
 
-        $region = $this->getDoctrine()->getRepository(Region::class)->findOneBy(["id" => $regionId]);
+        $region = $entityManager->getRepository(Region::class)->findOneBy(["id" => $regionId]);
         $user->setRegion($region);
 
-        $subRegion = $this->getDoctrine()->getRepository(SubRegion::class)->findOneBy(["id" => $subRegionId]);
+        $subRegion = $entityManager->getRepository(SubRegion::class)->findOneBy(["id" => $subRegionId]);
         $user->setSubRegion($subRegion);
 
-        $city = $this->getDoctrine()->getRepository(City::class)->findOneBy(["id" => $cityId]);
+        $city = $entityManager->getRepository(City::class)->findOneBy(["id" => $cityId]);
         $user->setCity($city);
 
         $entityManager->persist($user);

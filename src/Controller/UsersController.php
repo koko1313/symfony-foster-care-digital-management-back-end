@@ -36,8 +36,8 @@ class UsersController extends AbstractController {
      * @Route("/user/all", methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function getAllUsers(SerializerInterface $serializer) {
-        $allUsers = $this->getDoctrine()->getRepository(User::class)->findAll();
+    public function getAllUsers(SerializerInterface $serializer, EntityManagerInterface $entityManager) {
+        $allUsers = $entityManager->getRepository(User::class)->findAll();
 
         $context = new SerializationContext();
         $context->setSerializeNull(true); // serialize null values too
@@ -92,7 +92,7 @@ class UsersController extends AbstractController {
     public function deleteUser(Request $req, EntityManagerInterface $entityManager) {
         $userId = $req->get("userId");
 
-        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
+        $user = $entityManager->getRepository(User::class)->find($userId);
 
         if(!$user) {
             return new Response(null, Response::HTTP_BAD_REQUEST);
@@ -102,7 +102,7 @@ class UsersController extends AbstractController {
         $entityManager->flush();
 
         // check if user was deleted
-        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
+        $user = $entityManager->getRepository(User::class)->find($userId);
         if($user) {
             return new Response(null, Response::HTTP_BAD_REQUEST);
         }

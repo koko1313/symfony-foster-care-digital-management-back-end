@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Region;
+use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,8 +14,8 @@ class RegionsController extends AbstractController {
     /**
      * @Route("/region/all", methods={"GET"})
      */
-    public function getAllRegions(SerializerInterface $serializer) {
-        $regions = $this->getDoctrine()->getRepository(Region::class)->findAll();
+    public function getAllRegions(EntityManagerInterface $entityManager, SerializerInterface $serializer) {
+        $regions = $entityManager->getRepository(Region::class)->findAll();
 
         $regionsJson = $serializer->serialize($regions, 'json');
 

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\City;
+use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,9 +15,9 @@ class CitiesController extends AbstractController
     /**
      * @Route("/city/all", methods={"GET"})
      */
-    public function getAllCities(SerializerInterface $serializer)
+    public function getAllCities(SerializerInterface $serializer, EntityManagerInterface $entityManager)
     {
-        $cities = $this->getDoctrine()->getRepository(City::class)->findAll();
+        $cities = $entityManager->getRepository(City::class)->findAll();
 
         $citiesJson = $serializer->serialize($cities, 'json');
 
