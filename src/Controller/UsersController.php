@@ -94,7 +94,9 @@ class UsersController extends AbstractController {
         }
 
         $position = $entityManager->getRepository(Position::class)->find($positionId);
-        $user->setPosition($position);
+        $user->removeRole($user->getPosition()->getRole()); // remove role of the current position
+        $user->setPosition($position); // set the new position
+        $user->addRole($position->getRole()); // set the new role
 
         $user->setEmail($email);
         $user->setFirstName($firstName);
