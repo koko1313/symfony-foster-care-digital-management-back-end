@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\City;
+use App\Entity\Position;
 use App\Entity\Region;
 use App\Entity\SubRegion;
 use App\Entity\User;
@@ -73,6 +74,7 @@ class UsersController extends AbstractController {
      */
     public function update($id, Request $req, EntityManagerInterface $entityManager, SerializerInterface $serializer) {
         $userId = $id;
+        $positionId = $req->get("positionId");
         $email = $req->get("email");
         $firstName = $req->get("firstName");
         $secondName = $req->get("secondName");
@@ -81,11 +83,18 @@ class UsersController extends AbstractController {
         $subRegionId = $req->get("subRegionId");
         $cityId = $req->get("cityId");
 
+        if($this->checkEmptyFields([$positionId, $email, $firstName, $secondName, $lastName, $regionId, $subRegionId, $cityId])) {
+            return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
+        }
+
         $user = $entityManager->getRepository(User::class)->find($userId);
 
         if(!$user) {
             return new Response(null, Response::HTTP_NOT_FOUND);
         }
+
+        $position = $entityManager->getRepository(Position::class)->find($positionId);
+        $user->setPosition($position);
 
         $user->setEmail($email);
         $user->setFirstName($firstName);
@@ -130,6 +139,15 @@ class UsersController extends AbstractController {
         }
 
         return new Response(null);
+    }
+
+    private function checkEmptyFields($fields) {
+        foreach ($fields as $field) {
+            if($field == null) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
