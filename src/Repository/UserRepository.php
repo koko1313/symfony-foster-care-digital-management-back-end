@@ -36,6 +36,17 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
+    /**
+     * Used to find all users withot the first (which is the administrator).
+     */
+    public function findAllExcludeAdmin() {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.id != 1')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
     // /**
     //  * @return User[] Returns an array of User objects
     //  */

@@ -37,7 +37,7 @@ class UsersController extends AbstractController {
      * @IsGranted("ROLE_ADMIN")
      */
     public function getAllUsers(SerializerInterface $serializer, EntityManagerInterface $entityManager) {
-        $allUsers = $entityManager->getRepository(User::class)->findAll();
+        $allUsers = $entityManager->getRepository(User::class)->findAllExcludeAdmin();
 
         $context = new SerializationContext();
         $context->setSerializeNull(true); // serialize null values too
