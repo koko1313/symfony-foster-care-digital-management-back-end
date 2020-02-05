@@ -69,10 +69,10 @@ class UsersController extends AbstractController {
 
 
     /**
-     * @Route("/user/update", methods={"PUT"})
+     * @Route("/user/update/{id}", methods={"PUT"})
      */
-    public function update(Request $req, EntityManagerInterface $entityManager, SerializerInterface $serializer) {
-        $userId = $req->get("userId");
+    public function update($id, Request $req, EntityManagerInterface $entityManager, SerializerInterface $serializer) {
+        $userId = $id;
         $email = $req->get("email");
         $firstName = $req->get("firstName");
         $secondName = $req->get("secondName");
@@ -110,13 +110,11 @@ class UsersController extends AbstractController {
 
 
     /**
-     * @Route("/user/delete", methods={"DELETE"})
+     * @Route("/user/delete/{id}", methods={"DELETE"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function deleteUser(Request $req, EntityManagerInterface $entityManager) {
-        $userId = $req->get("userId");
-
-        $user = $entityManager->getRepository(User::class)->find($userId);
+    public function deleteUser($id, Request $req, EntityManagerInterface $entityManager) {
+        $user = $entityManager->getRepository(User::class)->find($id);
 
         if(!$user) {
             return new Response(null, Response::HTTP_BAD_REQUEST);
@@ -126,7 +124,7 @@ class UsersController extends AbstractController {
         $entityManager->flush();
 
         // check if user was deleted
-        $user = $entityManager->getRepository(User::class)->find($userId);
+        $user = $entityManager->getRepository(User::class)->find($id);
         if($user) {
             return new Response(null, Response::HTTP_BAD_REQUEST);
         }
