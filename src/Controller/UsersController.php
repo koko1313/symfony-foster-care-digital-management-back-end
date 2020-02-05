@@ -49,6 +49,26 @@ class UsersController extends AbstractController {
 
 
     /**
+     * @Route("/user/{id}", methods={"GET"})
+     * @IsGranted("ROLE_ADMIN")
+     */
+    public function getUserById($id, EntityManagerInterface $entityManager, SerializerInterface $serializer) {
+        $user = $entityManager->getRepository(User::class)->find($id);
+
+        if(!$user) {
+            return new Response(null, Response::HTTP_NOT_FOUND);
+        }
+
+        $context = new SerializationContext();
+        $context->setSerializeNull(true); // serialize null values too
+
+        $userJson = $serializer->serialize($user, 'json', $context);
+
+        return new Response($userJson);
+    }
+
+
+    /**
      * @Route("/user/update", methods={"PUT"})
      */
     public function update(Request $req, EntityManagerInterface $entityManager, SerializerInterface $serializer) {
