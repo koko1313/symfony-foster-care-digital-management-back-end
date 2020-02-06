@@ -36,6 +36,11 @@ class Child
      */
     private $address;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\EmployeeOEPG", inversedBy="child")
+     */
+    private $employeeOEPG;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -85,6 +90,18 @@ class Child
     public function setAddress(?string $address): self
     {
         $this->address = $address;
+
+        return $this;
+    }
+
+    public function getEmployeeOEPG(): ?EmployeeOEPG
+    {
+        return $this->employeeOEPG;
+    }
+
+    public function setEmployeeOEPG(?EmployeeOEPG $employeeOEPG): self
+    {
+        $this->employeeOEPG = $employeeOEPG;
 
         return $this;
     }

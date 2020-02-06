@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Constants\Roles;
+use App\Entity\Child;
 use App\Entity\City;
+use App\Entity\EmployeeOEPG;
 use App\Entity\Position;
 use App\Entity\Region;
 use App\Entity\Role;
@@ -76,13 +79,25 @@ class SecurityController extends AbstractController {
             return new Response(null, Response::HTTP_CONFLICT);
         }
 
-        $user = new User();
+        $position = $entityManager->getRepository(Position::class)->findOneBy(["id" => $positionId]);
+
+        switch ($position->getRole()->getName()) {
+            case Roles::ROLE_OEPG : {
+                $user = new EmployeeOEPG();
+                break;
+            }
+            default: {
+                $user = new User();
+                break;
+            }
+        }
+
         $user->setEmail($email);
 
         $encodedPassword = $this->encoder->encodePassword($user, $password);
         $user->setPassword($encodedPassword);
 
-        $position = $entityManager->getRepository(Position::class)->findOneBy(["id" => $positionId]);
+
         $user->setPosition($position);
 
         $role = $entityManager->getRepository(Role::class)->findOneBy(["id" => $position->getRole()]);
