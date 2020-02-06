@@ -33,6 +33,11 @@ class Family {
     /**
      * @ORM\Column(type="string", length=50)
      */
+    private $womanLastName;
+
+    /**
+     * @ORM\Column(type="string", length=50)
+     */
     private $manFirstName;
 
     /**
@@ -88,6 +93,15 @@ class Family {
 
     public function setWomanSecondName(string $womanSecondName) {
         $this->womanSecondName = $womanSecondName;
+        return $this;
+    }
+
+    public function getWomanLastName() {
+        return $this->womanLastName;
+    }
+
+    public function setWomanLastName(string $womanLastName) {
+        $this->womanLastName = $womanLastName;
         return $this;
     }
 
