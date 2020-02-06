@@ -39,6 +39,7 @@ class SubRegion {
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="subRegion")
+     * @JMS\Exclude()
      */
     private $users;
 

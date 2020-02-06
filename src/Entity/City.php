@@ -38,6 +38,7 @@ class City
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="city")
+     * @JMS\Exclude()
      */
     private $users;
 
