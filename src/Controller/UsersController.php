@@ -37,7 +37,7 @@ class UsersController extends AbstractController {
      * @Route("/user/all", methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function getAllUsers(SerializerInterface $serializer, EntityManagerInterface $entityManager) {
+    public function getAll(SerializerInterface $serializer, EntityManagerInterface $entityManager) {
         $allUsers = $entityManager->getRepository(User::class)->findAllExcludeAdmin();
 
         $context = new SerializationContext();
@@ -53,7 +53,7 @@ class UsersController extends AbstractController {
      * @Route("/user/{id}", methods={"GET"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function getUserById($id, EntityManagerInterface $entityManager, SerializerInterface $serializer) {
+    public function getById($id, EntityManagerInterface $entityManager, SerializerInterface $serializer) {
         $user = $entityManager->getRepository(User::class)->find($id);
 
         if(!$user) {
@@ -124,7 +124,7 @@ class UsersController extends AbstractController {
      * @Route("/user/delete/{id}", methods={"DELETE"})
      * @IsGranted("ROLE_ADMIN")
      */
-    public function deleteUser($id, Request $req, EntityManagerInterface $entityManager) {
+    public function delete($id, Request $req, EntityManagerInterface $entityManager) {
         $user = $entityManager->getRepository(User::class)->find($id);
 
         if(!$user) {
