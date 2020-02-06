@@ -79,11 +79,13 @@ class SecurityController extends AbstractController {
             return new Response(null, Response::HTTP_CONFLICT);
         }
 
+        // get the position
         $position = $entityManager->getRepository(Position::class)->findOneBy(["id" => $positionId]);
 
+        // check if position have dedicated Entity
         switch ($position->getRole()->getName()) {
-            case Roles::ROLE_OEPG : {
-                $user = new EmployeeOEPG();
+            case Roles::ROLE_OEPG : { // if the role of the position is ROLE_OEPG
+                $user = new EmployeeOEPG(); // create user, instance of EmployeeOEPG
                 break;
             }
             default: {
@@ -97,12 +99,10 @@ class SecurityController extends AbstractController {
         $encodedPassword = $this->encoder->encodePassword($user, $password);
         $user->setPassword($encodedPassword);
 
-
         $user->setPosition($position);
 
-        $role = $entityManager->getRepository(Role::class)->findOneBy(["id" => $position->getRole()]);
+        $role = $position->getRole();
         $user->addRole($role);
-
 
         $user->setFirstName($firstName);
         $user->setSecondName($secondName);
