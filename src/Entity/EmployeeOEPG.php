@@ -23,16 +23,11 @@ class EmployeeOEPG extends User {
         $this->child = new ArrayCollection();
     }
 
-    /**
-     * @return Collection|Child[]
-     */
-    public function getChild(): Collection
-    {
+    public function getChild() {
         return $this->child;
     }
 
-    public function addChild(Child $child): self
-    {
+    public function addChild(Child $child) {
         if (!$this->child->contains($child)) {
             $this->child[] = $child;
             $child->setEmployeeOEPG($this);
@@ -41,8 +36,7 @@ class EmployeeOEPG extends User {
         return $this;
     }
 
-    public function removeChild(Child $child): self
-    {
+    public function removeChild(Child $child) {
         if ($this->child->contains($child)) {
             $this->child->removeElement($child);
             // set the owning side to null (unless already changed)

@@ -6,11 +6,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class ChildrenController extends AbstractController {
 
     /**
-     * @Route("/children", methods={"GET"})
+     * @Route("/child/all", methods={"GET"})
+     * @IsGranted("ROLE_OEPG")
      */
     public function getAll() {
         $response = new JsonResponse();
