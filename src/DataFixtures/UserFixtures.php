@@ -2,6 +2,10 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\City;
+use App\Entity\Region;
+use App\Entity\Role;
+use App\Entity\SubRegion;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -22,11 +26,21 @@ class UserFixtures extends Fixture implements DependentFixtureInterface {
         $password = $this->encoder->encodePassword($user, "pass");
         $user->setPassword($password);
 
-        $user->addRole($this->getReference(RoleFixtures::ROLE_ADMIN_REFERENCE));
+        $roleAdmin = $manager->getRepository(Role::class)->findOneBy(["name" => "ROLE_ADMIN"]);
+        $user->addRole($roleAdmin);
 
         $user->setFirstName("");
         $user->setSecondName("");
         $user->setLastName("");
+
+        $sofiaRegion = $manager->getRepository(Region::class)->findOneBy(["name" => "София"]);
+        $user->setRegion($sofiaRegion);
+
+        $sofiaSubRegion = $manager->getRepository(SubRegion::class)->findOneBy(["name" => "София"]);
+        $user->setSubRegion($sofiaSubRegion);
+
+        $sofiaCity = $manager->getRepository(City::class)->findOneBy(["name" => "София"]);
+        $user->setCity($sofiaCity);
 
         $manager->persist($user);
 
@@ -36,6 +50,9 @@ class UserFixtures extends Fixture implements DependentFixtureInterface {
     public function getDependencies() {
         return array(
             RoleFixtures::class,
+            RegionFixtures::class,
+            SubRegionFixtures::class,
+            CityFixtures::class,
         );
     }
 }

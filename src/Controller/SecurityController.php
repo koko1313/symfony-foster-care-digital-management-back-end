@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Constants\Roles;
 use App\Entity\Child;
 use App\Entity\City;
-use App\Entity\EmployeeOEPG;
+use App\Entity\Employee;
 use App\Entity\Position;
 use App\Entity\Region;
 use App\Entity\Role;
@@ -85,7 +85,7 @@ class SecurityController extends AbstractController {
         // check if position have dedicated Entity
         switch ($position->getRole()->getName()) {
             case Roles::ROLE_OEPG : { // if the role of the position is ROLE_OEPG
-                $user = new EmployeeOEPG(); // create user, instance of EmployeeOEPG
+                $user = new Employee(); // create user, instance of EmployeeOEPG
                 break;
             }
             default: {

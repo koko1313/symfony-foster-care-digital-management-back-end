@@ -38,14 +38,14 @@ class SubRegion {
     private $cities;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="subRegion")
      * @JMS\Exclude()
+     * @ORM\OneToMany(targetEntity="App\Entity\Person", mappedBy="subRegion")
      */
-    private $users;
+    private $people;
 
     public function __construct() {
         $this->cities = new ArrayCollection();
-        $this->users = new ArrayCollection();
+        $this->people = new ArrayCollection();
     }
 
     public function getId() {
@@ -102,30 +102,30 @@ class SubRegion {
     }
 
     /**
-     * @return Collection|User[]
+     * @return Collection|Person[]
      */
-    public function getUsers(): Collection
+    public function getPeople(): Collection
     {
-        return $this->users;
+        return $this->people;
     }
 
-    public function addUser(User $user): self
+    public function addPerson(Person $person): self
     {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->setSubRegion($this);
+        if (!$this->people->contains($person)) {
+            $this->people[] = $person;
+            $person->setSubRegion($this);
         }
 
         return $this;
     }
 
-    public function removeUser(User $user): self
+    public function removePerson(Person $person): self
     {
-        if ($this->users->contains($user)) {
-            $this->users->removeElement($user);
+        if ($this->people->contains($person)) {
+            $this->people->removeElement($person);
             // set the owning side to null (unless already changed)
-            if ($user->getSubRegion() === $this) {
-                $user->setSubRegion(null);
+            if ($person->getSubRegion() === $this) {
+                $person->setSubRegion(null);
             }
         }
 

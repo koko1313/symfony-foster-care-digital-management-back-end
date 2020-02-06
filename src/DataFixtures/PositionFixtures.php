@@ -2,16 +2,21 @@
 
 namespace App\DataFixtures;
 
+use App\Constants\Roles;
 use App\Entity\Position;
+use App\Entity\Role;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class PositionFixtures extends Fixture implements DependentFixtureInterface {
+
     public function load(ObjectManager $manager) {
         $position = new Position();
         $position->setName("ОЕПГ");
-        $position->setRole($this->getReference(RoleFixtures::ROLE_OEPG_REFERENCE));
+
+        $roleOEPG = $manager->getRepository(Role::class)->findOneBy(["name" => Roles::ROLE_OEPG]);
+        $position->setRole($roleOEPG);
 
         $manager->persist($position);
         $manager->flush();

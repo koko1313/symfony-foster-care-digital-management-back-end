@@ -38,15 +38,15 @@ class Region {
     private $cities;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="region")
      * @JMS\Exclude()
+     * @ORM\OneToMany(targetEntity="App\Entity\Person", mappedBy="region")
      */
-    private $users;
+    private $people;
 
     public function __construct() {
         $this->subRegions = new ArrayCollection();
         $this->cities = new ArrayCollection();
-        $this->users = new ArrayCollection();
+        $this->people = new ArrayCollection();
     }
 
     public function getId() {
@@ -115,25 +115,31 @@ class Region {
         return $this;
     }
 
-    public function getUsers() {
-        return $this->users;
+    /**
+     * @return Collection|Person[]
+     */
+    public function getPeople(): Collection
+    {
+        return $this->people;
     }
 
-    public function addUser(User $user) {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->setRegion($this);
+    public function addPerson(Person $person): self
+    {
+        if (!$this->people->contains($person)) {
+            $this->people[] = $person;
+            $person->setRegion($this);
         }
 
         return $this;
     }
 
-    public function removeUser(User $user) {
-        if ($this->users->contains($user)) {
-            $this->users->removeElement($user);
+    public function removePerson(Person $person): self
+    {
+        if ($this->people->contains($person)) {
+            $this->people->removeElement($person);
             // set the owning side to null (unless already changed)
-            if ($user->getRegion() === $this) {
-                $user->setRegion(null);
+            if ($person->getRegion() === $this) {
+                $person->setRegion(null);
             }
         }
 

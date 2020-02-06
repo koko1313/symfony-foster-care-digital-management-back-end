@@ -5,9 +5,10 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ChildRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\PersonRepository")
+ * @ORM\InheritanceType("JOINED")
  */
-class Child
+abstract class Person
 {
     /**
      * @ORM\Id()
@@ -32,14 +33,27 @@ class Child
     private $lastName;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Region", inversedBy="people")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $region;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\SubRegion", inversedBy="people")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $subRegion;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\City", inversedBy="people")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $city;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      */
     private $address;
-
-//    /**
-//     * @ORM\ManyToOne(targetEntity="App\Entity\EmployeeOEPG", inversedBy="child")
-//     */
-//    private $employeeOEPG;
 
     public function getId(): ?int
     {
@@ -82,6 +96,42 @@ class Child
         return $this;
     }
 
+    public function getRegion(): ?Region
+    {
+        return $this->region;
+    }
+
+    public function setRegion(?Region $region): self
+    {
+        $this->region = $region;
+
+        return $this;
+    }
+
+    public function getSubRegion(): ?SubRegion
+    {
+        return $this->subRegion;
+    }
+
+    public function setSubRegion(?SubRegion $subRegion): self
+    {
+        $this->subRegion = $subRegion;
+
+        return $this;
+    }
+
+    public function getCity(): ?City
+    {
+        return $this->city;
+    }
+
+    public function setCity(?City $city): self
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
     public function getAddress(): ?string
     {
         return $this->address;
@@ -90,18 +140,6 @@ class Child
     public function setAddress(?string $address): self
     {
         $this->address = $address;
-
-        return $this;
-    }
-
-    public function getEmployeeOEPG(): ?EmployeeOEPG
-    {
-        return $this->employeeOEPG;
-    }
-
-    public function setEmployeeOEPG(?EmployeeOEPG $employeeOEPG): self
-    {
-        $this->employeeOEPG = $employeeOEPG;
 
         return $this;
     }
