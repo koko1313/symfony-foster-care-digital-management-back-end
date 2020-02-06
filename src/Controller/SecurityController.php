@@ -5,15 +5,13 @@ namespace App\Controller;
 use App\Constants\Roles;
 use App\Entity\Child;
 use App\Entity\City;
-use App\Entity\Employee;
+use App\Entity\EmployeeOEPG;
 use App\Entity\Position;
 use App\Entity\Region;
-use App\Entity\Role;
 use App\Entity\SubRegion;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializerInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -85,7 +83,7 @@ class SecurityController extends AbstractController {
         // check if position have dedicated Entity
         switch ($position->getRole()->getName()) {
             case Roles::ROLE_OEPG : { // if the role of the position is ROLE_OEPG
-                $user = new Employee(); // create user, instance of EmployeeOEPG
+                $user = new EmployeeOEPG(); // create user, instance of EmployeeOEPG
                 break;
             }
             default: {

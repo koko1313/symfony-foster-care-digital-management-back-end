@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\City;
+use App\Entity\Employee;
 use App\Entity\Position;
 use App\Entity\Region;
 use App\Entity\SubRegion;
@@ -38,7 +39,7 @@ class UsersController extends AbstractController {
      * @IsGranted("ROLE_ADMIN")
      */
     public function getAll(SerializerInterface $serializer, EntityManagerInterface $entityManager) {
-        $allUsers = $entityManager->getRepository(User::class)->findAllExcludeAdmin();
+        $allUsers = $entityManager->getRepository(Employee::class)->findAll();
 
         $context = new SerializationContext();
         $context->setSerializeNull(true); // serialize null values too
@@ -54,7 +55,7 @@ class UsersController extends AbstractController {
      * @IsGranted("ROLE_ADMIN")
      */
     public function getById($id, EntityManagerInterface $entityManager, SerializerInterface $serializer) {
-        $user = $entityManager->getRepository(User::class)->find($id);
+        $user = $entityManager->getRepository(Employee::class)->find($id);
 
         if(!$user) {
             return new Response(null, Response::HTTP_NOT_FOUND);

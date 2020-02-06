@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PersonRepository")
  * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorMap({"user" = "User", "employeeOEPG" = "EmployeeOEPG"})
  */
 abstract class Person
 {
