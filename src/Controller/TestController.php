@@ -8,12 +8,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use App\Constants\Roles;
 
 class TestController extends AbstractController {
 
     /**
      * @Route("/protected-test", methods={"GET", "POST"})
-     * @IsGranted("ROLE_ADMIN")
+     * @IsGranted(Roles::ROLE_ADMIN)
      */
     public function sad() {
         return new Response("assda");

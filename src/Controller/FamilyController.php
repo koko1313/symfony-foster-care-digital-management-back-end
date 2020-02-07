@@ -11,12 +11,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use App\Constants\Roles;
 
 class FamilyController extends AbstractController {
 
     /**
      * @Route("/family/all", methods={"GET"})
-     * @IsGranted("ROLE_OEPG")
+     * @IsGranted(Roles::ROLE_OEPG)
      */
     public function getAll(SerializerInterface $serializer, EntityManagerInterface $entityManager) {
         $allFamilies = $entityManager->getRepository(Family::class)->findAll();
@@ -31,7 +32,7 @@ class FamilyController extends AbstractController {
 
     /**
      * @Route("/family/delete/{id}", methods={"DELETE"})
-     * @IsGranted("ROLE_OEPG")
+     * @IsGranted(Roles::ROLE_OEPG)
      */
     public function delete($id, Request $req, EntityManagerInterface $entityManager) {
         $family = $entityManager->getRepository(Family::class)->find($id);
