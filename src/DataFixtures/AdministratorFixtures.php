@@ -2,17 +2,17 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Administrator;
 use App\Entity\City;
 use App\Entity\Region;
 use App\Entity\Role;
 use App\Entity\SubRegion;
-use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class UserFixtures extends Fixture implements DependentFixtureInterface {
+class AdministratorFixtures extends Fixture implements DependentFixtureInterface {
     private $encoder;
 
     public function __construct(UserPasswordEncoderInterface $encoder) {
@@ -20,7 +20,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface {
     }
 
     public function load(ObjectManager $manager) {
-        $user = new User();
+        $user = new Administrator();
         $user->setEmail("admin@admin.com");
 
         $password = $this->encoder->encodePassword($user, "pass");

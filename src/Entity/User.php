@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User extends Person implements UserInterface
+abstract class User extends Person implements UserInterface
 {
 
     /**
