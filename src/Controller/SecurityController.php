@@ -27,15 +27,19 @@ class SecurityController extends AbstractController {
      */
     public function login(Request $req, SerializerInterface $serializer, EntityManagerInterface $entityManager) {
         $user = $entityManager->getRepository(User::class)->findOneBy(["email" => $req->get("email")]);
+        $entityManager->close();
 
         if($user) {
-            if($req->get("password") && $this->encoder->isPasswordValid($user, $req->get("password"))) {
+            // get the concrete user, based on $user class name - get_class($user)
+            $concreteUser = $entityManager->getRepository(get_class($user))->findOneBy(["email" => $req->get("email")]);
+
+            if($req->get("password") && $this->encoder->isPasswordValid($concreteUser, $req->get("password"))) {
                 // Manually authenticate user in controller
-                $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+                $token = new UsernamePasswordToken($concreteUser, $concreteUser->getPassword(), 'main', $concreteUser->getRoles());
                 $this->get('security.token_storage')->setToken($token);
                 $this->get('session')->set('_security_main', serialize($token));
 
-                $userJson = $serializer->serialize($user, 'json');
+                $userJson = $serializer->serialize($concreteUser, 'json');
 
                 return new Response($userJson);
             }
