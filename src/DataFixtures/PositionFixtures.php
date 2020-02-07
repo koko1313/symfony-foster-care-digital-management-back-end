@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Constants\Positions;
 use App\Constants\Roles;
 use App\Entity\Position;
 use App\Entity\Role;
@@ -13,7 +14,7 @@ class PositionFixtures extends Fixture implements DependentFixtureInterface {
 
     public function load(ObjectManager $manager) {
         $position = new Position();
-        $position->setName("ОЕПГ");
+        $position->setName(Positions::POSITION_OEPG);
 
         $roleOEPG = $manager->getRepository(Role::class)->findOneBy(["name" => Roles::ROLE_OEPG]);
         $position->setRole($roleOEPG);

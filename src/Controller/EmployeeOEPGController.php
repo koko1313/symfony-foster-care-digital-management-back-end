@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Constants\Positions;
 use App\Entity\City;
 use App\Entity\EmployeeOEPG;
 use App\Entity\Position;
@@ -64,7 +65,6 @@ class EmployeeOEPGController extends UsersController {
     public function register(Request $req, EntityManagerInterface $entityManager, SerializerInterface $serializer) {
         $email = $req->get("email");
         $password = $req->get("password");
-        $positionId = $req->get("positionId");
         $firstName = $req->get("firstName");
         $secondName = $req->get("secondName");
         $lastName = $req->get("lastName");
@@ -72,7 +72,7 @@ class EmployeeOEPGController extends UsersController {
         $subRegionId = $req->get("subRegionId");
         $cityId = $req->get("cityId");
 
-        if($this->checkEmptyFields([$email, $password, $positionId, $firstName, $secondName, $lastName, $regionId, $subRegionId, $cityId])) {
+        if($this->checkEmptyFields([$email, $password, $firstName, $secondName, $lastName, $regionId, $subRegionId, $cityId])) {
             return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
         }
 
@@ -89,7 +89,7 @@ class EmployeeOEPGController extends UsersController {
         $encodedPassword = $this->encoder->encodePassword($user, $password);
         $user->setPassword($encodedPassword);
 
-        $position = $entityManager->getRepository(Position::class)->findOneBy(["id" => $positionId]);
+        $position = $entityManager->getRepository(Position::class)->findOneBy(["name" => Positions::POSITION_OEPG]);
         $user->setPosition($position);
 
         $role = $position->getRole();
