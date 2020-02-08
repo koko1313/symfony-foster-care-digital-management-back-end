@@ -36,7 +36,7 @@ class UsersController extends SecurityController {
         $user = $entityManager->getRepository(User::class)->find($id);
 
         if(!$user) {
-            return new Response(null, Response::HTTP_BAD_REQUEST);
+            return new Response(null, Response::HTTP_NOT_FOUND);
         }
 
         $entityManager->remove($user);
@@ -49,16 +49,6 @@ class UsersController extends SecurityController {
         }
 
         return new Response(null);
-    }
-
-
-    protected function checkEmptyFields($fields) {
-        foreach ($fields as $field) {
-            if($field == null) {
-                return true;
-            }
-        }
-        return false;
     }
 
 }

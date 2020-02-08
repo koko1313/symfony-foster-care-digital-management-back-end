@@ -9,13 +9,13 @@ use App\Entity\Position;
 use App\Entity\Region;
 use App\Entity\SubRegion;
 use Doctrine\ORM\EntityManagerInterface;
-use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Constants\Roles;
+use App\Helpers\Validator;
 
 /**
  * @Route("employee-oepg", name="employee-oepg_")
@@ -29,10 +29,7 @@ class EmployeeOEPGController extends UsersController {
     public function getAll(SerializerInterface $serializer, EntityManagerInterface $entityManager) {
         $allUsers = $entityManager->getRepository(EmployeeOEPG::class)->findAll();
 
-        $context = new SerializationContext();
-        $context->setSerializeNull(true); // serialize null values too
-
-        $allUsersJson = $serializer->serialize($allUsers, 'json', $context);
+        $allUsersJson = $serializer->serialize($allUsers, 'json');
 
         return new Response($allUsersJson);
     }
@@ -49,10 +46,7 @@ class EmployeeOEPGController extends UsersController {
             return new Response(null, Response::HTTP_NOT_FOUND);
         }
 
-        $context = new SerializationContext();
-        $context->setSerializeNull(true); // serialize null values too
-
-        $userJson = $serializer->serialize($user, 'json', $context);
+        $userJson = $serializer->serialize($user, 'json');
 
         return new Response($userJson);
     }
@@ -72,7 +66,7 @@ class EmployeeOEPGController extends UsersController {
         $subRegionId = $req->get("subRegionId");
         $cityId = $req->get("cityId");
 
-        if($this->checkEmptyFields([$email, $password, $firstName, $secondName, $lastName, $regionId, $subRegionId, $cityId])) {
+        if(Validator::checkEmptyFields([$email, $password, $firstName, $secondName, $lastName, $regionId, $subRegionId, $cityId])) {
             return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
         }
 
@@ -131,7 +125,7 @@ class EmployeeOEPGController extends UsersController {
         $subRegionId = $req->get("subRegionId");
         $cityId = $req->get("cityId");
 
-        if($this->checkEmptyFields([$email, $firstName, $secondName, $lastName, $regionId, $subRegionId, $cityId])) {
+        if(Validator::checkEmptyFields([$email, $firstName, $secondName, $lastName, $regionId, $subRegionId, $cityId])) {
             return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
         }
 
