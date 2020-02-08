@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="App\Repository\FamilyRepository")
  */
 class Family {
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -64,6 +65,11 @@ class Family {
      * @ORM\Column(type="smallint", nullable=true)
      */
     private $preferKidMaxAge;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\EmployeeOEPG", inversedBy="families")
+     */
+    private $warden;
 
     public function getId() {
         return $this->id;
@@ -156,6 +162,18 @@ class Family {
 
     public function setPreferKidMaxAge(?int $preferKidMaxAge) {
         $this->preferKidMaxAge = $preferKidMaxAge;
+        return $this;
+    }
+
+    public function getWarden(): ?EmployeeOEPG
+    {
+        return $this->warden;
+    }
+
+    public function setWarden(?EmployeeOEPG $warden): self
+    {
+        $this->warden = $warden;
+
         return $this;
     }
 }

@@ -63,6 +63,7 @@ class FamilyController extends AbstractController {
         $preferKidGender = $req->get("preferKidGender");
         $preferKidMinAge = $req->get("preferKidMinAge");
         $preferKidMaxAge = $req->get("preferKidMaxAge");
+        $wardenId = $req->get("wardenId");
 
         if(Validator::checkEmptyFields([$titular, $womanFirstName, $womanSecondName, $womanLastName, $manFirstName, $manSecondName, $manLastName])) {
             return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
