@@ -68,7 +68,54 @@ class FamilyController extends AbstractController {
             return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
         }
 
+        if($preferKidMinAge == "") $preferKidMinAge = null;
+        if($preferKidMaxAge == "") $preferKidMaxAge = null;
+
         $family = new Family();
+        $family->setTitular($titular);
+        $family->setWomanFirstName($womanFirstName);
+        $family->setWomanSecondName($womanSecondName);
+        $family->setWomanLastName($womanLastName);
+        $family->setManFirstName($manFirstName);
+        $family->setManSecondName($manSecondName);
+        $family->setManLastName($manLastName);
+        $family->setPreferKidGender($preferKidGender);
+        $family->setPreferKidMinAge($preferKidMinAge);
+        $family->setPreferKidMaxAge($preferKidMaxAge);
+
+        $entityManager->persist($family);
+        $entityManager->flush();
+
+        $familyJson = $serializer->serialize($family, 'json');
+
+        return new Response($familyJson);
+    }
+
+    /**
+     * @Route("/update/{id}", methods={"PUT"})
+     * @IsGranted(Roles::ROLE_OEPG)
+     */
+    public function update($id, Request $req, EntityManagerInterface $entityManager, SerializerInterface $serializer) {
+        $titular = $req->get("titular");
+        $womanFirstName = $req->get("womanFirstName");
+        $womanSecondName = $req->get("womanSecondName");
+        $womanLastName = $req->get("womanLastName");
+        $manFirstName = $req->get("manFirstName");
+        $manSecondName = $req->get("manSecondName");
+        $manLastName = $req->get("manLastName");
+        $preferKidGender = $req->get("preferKidGender");
+        $preferKidMinAge = $req->get("preferKidMinAge");
+        $preferKidMaxAge = $req->get("preferKidMaxAge");
+
+        if(Validator::checkEmptyFields([$titular, $womanFirstName, $womanSecondName, $womanLastName, $manFirstName, $manSecondName, $manLastName])) {
+            return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
+        }
+
+        if($preferKidMinAge == "") $preferKidMinAge = null;
+        if($preferKidMaxAge == "") $preferKidMaxAge = null;
+
+        $family = $entityManager->getRepository(Family::class)->find($id);
+
         $family->setTitular($titular);
         $family->setWomanFirstName($womanFirstName);
         $family->setWomanSecondName($womanSecondName);
