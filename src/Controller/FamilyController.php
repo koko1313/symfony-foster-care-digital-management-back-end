@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\EmployeeOEPG;
 use App\Entity\Family;
 use App\Helpers\Validator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Constants\Roles;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @Route("family", name="family_")
@@ -22,8 +24,8 @@ class FamilyController extends AbstractController {
      * @Route("/all", methods={"GET"})
      * @IsGranted(Roles::ROLE_OEPG)
      */
-    public function getAll(SerializerInterface $serializer, EntityManagerInterface $entityManager) {
-        $allFamilies = $entityManager->getRepository(Family::class)->findAll();
+    public function getAll(SerializerInterface $serializer, EntityManagerInterface $entityManager, UserInterface $user) {
+        $allFamilies = $entityManager->getRepository(Family::class)->findAllBelongToWarden($user->getId());
 
         $allFamiliesJson = $serializer->serialize($allFamilies, 'json');
 
@@ -35,8 +37,8 @@ class FamilyController extends AbstractController {
      * @Route("/{id}", methods={"GET"})
      * @IsGranted(Roles::ROLE_OEPG)
      */
-    public function getById($id, EntityManagerInterface $entityManager, SerializerInterface $serializer) {
-        $family = $entityManager->getRepository(Family::class)->find($id);
+    public function getById($id, EntityManagerInterface $entityManager, SerializerInterface $serializer, UserInterface $user) {
+        $family = $entityManager->getRepository(Family::class)->findByIdBelongToWarden($id, $user->getId());
 
         if(!$family) {
             return new Response(null, Response::HTTP_NOT_FOUND);
@@ -84,6 +86,9 @@ class FamilyController extends AbstractController {
         $family->setPreferKidMinAge($preferKidMinAge);
         $family->setPreferKidMaxAge($preferKidMaxAge);
 
+        $warden = $entityManager->getRepository(EmployeeOEPG::class)->find($wardenId);
+        $family->setWarden($warden);
+
         $entityManager->persist($family);
         $entityManager->flush();
 
@@ -107,6 +112,7 @@ class FamilyController extends AbstractController {
         $preferKidGender = $req->get("preferKidGender");
         $preferKidMinAge = $req->get("preferKidMinAge");
         $preferKidMaxAge = $req->get("preferKidMaxAge");
+        $wardenId = $req->get("wardenId");
 
         if(Validator::checkEmptyFields([$titular, $womanFirstName, $womanSecondName, $womanLastName, $manFirstName, $manSecondName, $manLastName])) {
             return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
@@ -127,6 +133,9 @@ class FamilyController extends AbstractController {
         $family->setPreferKidGender($preferKidGender);
         $family->setPreferKidMinAge($preferKidMinAge);
         $family->setPreferKidMaxAge($preferKidMaxAge);
+
+        $warden = $entityManager->getRepository(EmployeeOEPG::class)->find($wardenId);
+        $family->setWarden($warden);
 
         $entityManager->persist($family);
         $entityManager->flush();

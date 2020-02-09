@@ -19,6 +19,33 @@ class FamilyRepository extends ServiceEntityRepository
         parent::__construct($registry, Family::class);
     }
 
+
+    /**
+     * Find all families, belong to warden id
+     */
+    public function findAllBelongToWarden($wardenId) {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.warden = :val')
+            ->setParameter('val', $wardenId)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * Find a family, belong to warden id
+     */
+    public function findByIdBelongToWarden($id, $wardenId) {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.id = :id')
+            ->andWhere('f.warden = :wardenId')
+            ->setParameter('id', $id)
+            ->setParameter('wardenId', $wardenId)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
     // /**
     //  * @return Family[] Returns an array of Family objects
     //  */
