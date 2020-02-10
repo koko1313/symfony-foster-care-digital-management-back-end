@@ -42,9 +42,16 @@ class City
      */
     private $people;
 
+    /**
+     * @JMS\Exclude()
+     * @ORM\OneToMany(targetEntity="App\Entity\Family", mappedBy="city")
+     */
+    private $families;
+
     public function __construct()
     {
         $this->people = new ArrayCollection();
+        $this->families = new ArrayCollection();
     }
 
 
@@ -107,6 +114,37 @@ class City
             // set the owning side to null (unless already changed)
             if ($person->getCity() === $this) {
                 $person->setCity(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Family[]
+     */
+    public function getFamilies(): Collection
+    {
+        return $this->families;
+    }
+
+    public function addFamily(Family $family): self
+    {
+        if (!$this->families->contains($family)) {
+            $this->families[] = $family;
+            $family->setCity($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFamily(Family $family): self
+    {
+        if ($this->families->contains($family)) {
+            $this->families->removeElement($family);
+            // set the owning side to null (unless already changed)
+            if ($family->getCity() === $this) {
+                $family->setCity(null);
             }
         }
 

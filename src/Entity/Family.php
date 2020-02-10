@@ -71,6 +71,26 @@ class Family {
      */
     private $warden;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Region", inversedBy="families")
+     */
+    private $region;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\SubRegion", inversedBy="families")
+     */
+    private $subRegion;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\City", inversedBy="families")
+     */
+    private $city;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $address;
+
     public function getId() {
         return $this->id;
     }
@@ -173,6 +193,54 @@ class Family {
     public function setWarden(?EmployeeOEPG $warden): self
     {
         $this->warden = $warden;
+
+        return $this;
+    }
+
+    public function getRegion(): ?Region
+    {
+        return $this->region;
+    }
+
+    public function setRegion(?Region $region): self
+    {
+        $this->region = $region;
+
+        return $this;
+    }
+
+    public function getSubRegion(): ?SubRegion
+    {
+        return $this->subRegion;
+    }
+
+    public function setSubRegion(?SubRegion $subRegion): self
+    {
+        $this->subRegion = $subRegion;
+
+        return $this;
+    }
+
+    public function getCity(): ?City
+    {
+        return $this->city;
+    }
+
+    public function setCity(?City $city): self
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?string $address): self
+    {
+        $this->address = $address;
 
         return $this;
     }

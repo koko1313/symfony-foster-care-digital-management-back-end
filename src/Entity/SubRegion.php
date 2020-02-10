@@ -43,9 +43,16 @@ class SubRegion {
      */
     private $people;
 
+    /**
+     * @JMS\Exclude()
+     * @ORM\OneToMany(targetEntity="App\Entity\Family", mappedBy="subRegion")
+     */
+    private $families;
+
     public function __construct() {
         $this->cities = new ArrayCollection();
         $this->people = new ArrayCollection();
+        $this->families = new ArrayCollection();
     }
 
     public function getId() {
@@ -126,6 +133,37 @@ class SubRegion {
             // set the owning side to null (unless already changed)
             if ($person->getSubRegion() === $this) {
                 $person->setSubRegion(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Family[]
+     */
+    public function getFamilies(): Collection
+    {
+        return $this->families;
+    }
+
+    public function addFamily(Family $family): self
+    {
+        if (!$this->families->contains($family)) {
+            $this->families[] = $family;
+            $family->setSubRegion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFamily(Family $family): self
+    {
+        if ($this->families->contains($family)) {
+            $this->families->removeElement($family);
+            // set the owning side to null (unless already changed)
+            if ($family->getSubRegion() === $this) {
+                $family->setSubRegion(null);
             }
         }
 

@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\City;
 use App\Entity\EmployeeOEPG;
 use App\Entity\Family;
+use App\Entity\Region;
+use App\Entity\SubRegion;
 use App\Helpers\Validator;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializerInterface;
@@ -65,6 +68,10 @@ class FamilyController extends AbstractController {
         $preferKidGender = $req->get("preferKidGender");
         $preferKidMinAge = $req->get("preferKidMinAge");
         $preferKidMaxAge = $req->get("preferKidMaxAge");
+        $regionId = $req->get("regionId");
+        $subRegionId = $req->get("subRegionId");
+        $cityId = $req->get("cityId");
+        $address = $req->get("address");
         $wardenId = $req->get("wardenId");
 
         if(Validator::checkEmptyFields([$titular, $womanFirstName, $womanSecondName, $womanLastName, $manFirstName, $manSecondName, $manLastName])) {
@@ -85,6 +92,17 @@ class FamilyController extends AbstractController {
         $family->setPreferKidGender($preferKidGender);
         $family->setPreferKidMinAge($preferKidMinAge);
         $family->setPreferKidMaxAge($preferKidMaxAge);
+
+        $region = $entityManager->getRepository(Region::class)->find($regionId);
+        $family->setRegion($region);
+
+        $subRegion = $entityManager->getRepository(SubRegion::class)->find($subRegionId);
+        $family->setSubRegion($subRegion);
+
+        $city = $entityManager->getRepository(City::class)->find($cityId);
+        $family->setCity($city);
+
+        $family->setAddress($address);
 
         $warden = $entityManager->getRepository(EmployeeOEPG::class)->find($wardenId);
         $family->setWarden($warden);
@@ -112,6 +130,10 @@ class FamilyController extends AbstractController {
         $preferKidGender = $req->get("preferKidGender");
         $preferKidMinAge = $req->get("preferKidMinAge");
         $preferKidMaxAge = $req->get("preferKidMaxAge");
+        $regionId = $req->get("regionId");
+        $subRegionId = $req->get("subRegionId");
+        $cityId = $req->get("cityId");
+        $address = $req->get("address");
         $wardenId = $req->get("wardenId");
 
         if(Validator::checkEmptyFields([$titular, $womanFirstName, $womanSecondName, $womanLastName, $manFirstName, $manSecondName, $manLastName])) {
@@ -133,6 +155,17 @@ class FamilyController extends AbstractController {
         $family->setPreferKidGender($preferKidGender);
         $family->setPreferKidMinAge($preferKidMinAge);
         $family->setPreferKidMaxAge($preferKidMaxAge);
+
+        $region = $entityManager->getRepository(Region::class)->find($regionId);
+        $family->setRegion($region);
+
+        $subRegion = $entityManager->getRepository(SubRegion::class)->find($subRegionId);
+        $family->setSubRegion($subRegion);
+
+        $city = $entityManager->getRepository(City::class)->find($cityId);
+        $family->setCity($city);
+
+        $family->setAddress($address);
 
         $warden = $entityManager->getRepository(EmployeeOEPG::class)->find($wardenId);
         $family->setWarden($warden);
