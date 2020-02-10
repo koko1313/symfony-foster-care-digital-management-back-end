@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20200208192606 extends AbstractMigration
+final class Version20200210141748 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -29,7 +29,7 @@ final class Version20200208192606 extends AbstractMigration
         $this->addSql('CREATE TABLE city (id INT AUTO_INCREMENT NOT NULL, sub_region_id INT NOT NULL, region_id INT NOT NULL, name VARCHAR(255) NOT NULL, INDEX IDX_2D5B02348A2B47EB (sub_region_id), INDEX IDX_2D5B023498260155 (region_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE employee (id INT NOT NULL, position_id INT DEFAULT NULL, INDEX IDX_5D9F75A1DD842E46 (position_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE employee_oepg (id INT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE family (id INT AUTO_INCREMENT NOT NULL, titular VARCHAR(255) NOT NULL, woman_first_name VARCHAR(50) NOT NULL, woman_second_name VARCHAR(50) NOT NULL, woman_last_name VARCHAR(50) NOT NULL, man_first_name VARCHAR(50) NOT NULL, man_second_name VARCHAR(50) NOT NULL, man_last_name VARCHAR(50) NOT NULL, prefer_kid_gender VARCHAR(1) DEFAULT NULL, prefer_kid_min_age SMALLINT DEFAULT NULL, prefer_kid_max_age SMALLINT DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE family (id INT AUTO_INCREMENT NOT NULL, warden_id INT DEFAULT NULL, region_id INT DEFAULT NULL, sub_region_id INT DEFAULT NULL, city_id INT DEFAULT NULL, titular VARCHAR(50) NOT NULL, woman_first_name VARCHAR(50) NOT NULL, woman_second_name VARCHAR(50) NOT NULL, woman_last_name VARCHAR(50) NOT NULL, man_first_name VARCHAR(50) NOT NULL, man_second_name VARCHAR(50) NOT NULL, man_last_name VARCHAR(50) NOT NULL, prefer_kid_gender VARCHAR(1) DEFAULT NULL, prefer_kid_min_age SMALLINT DEFAULT NULL, prefer_kid_max_age SMALLINT DEFAULT NULL, address VARCHAR(255) DEFAULT NULL, INDEX IDX_A5E6215B9533F2F6 (warden_id), INDEX IDX_A5E6215B98260155 (region_id), INDEX IDX_A5E6215B8A2B47EB (sub_region_id), INDEX IDX_A5E6215B8BAC62AF (city_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE position (id INT AUTO_INCREMENT NOT NULL, role_id INT DEFAULT NULL, name VARCHAR(50) NOT NULL, INDEX IDX_462CE4F5D60322AC (role_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE region (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE role (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(50) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
@@ -46,6 +46,10 @@ final class Version20200208192606 extends AbstractMigration
         $this->addSql('ALTER TABLE employee ADD CONSTRAINT FK_5D9F75A1DD842E46 FOREIGN KEY (position_id) REFERENCES position (id)');
         $this->addSql('ALTER TABLE employee ADD CONSTRAINT FK_5D9F75A1BF396750 FOREIGN KEY (id) REFERENCES person (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE employee_oepg ADD CONSTRAINT FK_452DF6C8BF396750 FOREIGN KEY (id) REFERENCES person (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE family ADD CONSTRAINT FK_A5E6215B9533F2F6 FOREIGN KEY (warden_id) REFERENCES employee_oepg (id)');
+        $this->addSql('ALTER TABLE family ADD CONSTRAINT FK_A5E6215B98260155 FOREIGN KEY (region_id) REFERENCES region (id)');
+        $this->addSql('ALTER TABLE family ADD CONSTRAINT FK_A5E6215B8A2B47EB FOREIGN KEY (sub_region_id) REFERENCES sub_region (id)');
+        $this->addSql('ALTER TABLE family ADD CONSTRAINT FK_A5E6215B8BAC62AF FOREIGN KEY (city_id) REFERENCES city (id)');
         $this->addSql('ALTER TABLE position ADD CONSTRAINT FK_462CE4F5D60322AC FOREIGN KEY (role_id) REFERENCES role (id)');
         $this->addSql('ALTER TABLE sub_region ADD CONSTRAINT FK_BD33BE3A98260155 FOREIGN KEY (region_id) REFERENCES region (id)');
     }
@@ -61,14 +65,18 @@ final class Version20200208192606 extends AbstractMigration
         $this->addSql('ALTER TABLE employee_oepg DROP FOREIGN KEY FK_452DF6C8BF396750');
         $this->addSql('ALTER TABLE user_role DROP FOREIGN KEY FK_2DE8C6A3A76ED395');
         $this->addSql('ALTER TABLE person DROP FOREIGN KEY FK_34DCD1768BAC62AF');
+        $this->addSql('ALTER TABLE family DROP FOREIGN KEY FK_A5E6215B8BAC62AF');
+        $this->addSql('ALTER TABLE family DROP FOREIGN KEY FK_A5E6215B9533F2F6');
         $this->addSql('ALTER TABLE employee DROP FOREIGN KEY FK_5D9F75A1DD842E46');
         $this->addSql('ALTER TABLE person DROP FOREIGN KEY FK_34DCD17698260155');
         $this->addSql('ALTER TABLE city DROP FOREIGN KEY FK_2D5B023498260155');
+        $this->addSql('ALTER TABLE family DROP FOREIGN KEY FK_A5E6215B98260155');
         $this->addSql('ALTER TABLE sub_region DROP FOREIGN KEY FK_BD33BE3A98260155');
         $this->addSql('ALTER TABLE user_role DROP FOREIGN KEY FK_2DE8C6A3D60322AC');
         $this->addSql('ALTER TABLE position DROP FOREIGN KEY FK_462CE4F5D60322AC');
         $this->addSql('ALTER TABLE person DROP FOREIGN KEY FK_34DCD1768A2B47EB');
         $this->addSql('ALTER TABLE city DROP FOREIGN KEY FK_2D5B02348A2B47EB');
+        $this->addSql('ALTER TABLE family DROP FOREIGN KEY FK_A5E6215B8A2B47EB');
         $this->addSql('DROP TABLE person');
         $this->addSql('DROP TABLE user');
         $this->addSql('DROP TABLE user_role');

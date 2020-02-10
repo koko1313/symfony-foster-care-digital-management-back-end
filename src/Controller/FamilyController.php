@@ -27,7 +27,7 @@ class FamilyController extends AbstractController {
      * @Route("/all", methods={"GET"})
      * @IsGranted(Roles::ROLE_OEPG)
      */
-    public function getAll(SerializerInterface $serializer, EntityManagerInterface $entityManager, UserInterface $user) {
+    public function getAll(SerializerInterface $serializer, EntityManagerInterface $entityManager, UserInterface $user = null) {
         $allFamilies = $entityManager->getRepository(Family::class)->findAllBelongToWarden($user->getId());
 
         $allFamiliesJson = $serializer->serialize($allFamilies, 'json');
@@ -40,7 +40,7 @@ class FamilyController extends AbstractController {
      * @Route("/{id}", methods={"GET"})
      * @IsGranted(Roles::ROLE_OEPG)
      */
-    public function getById($id, EntityManagerInterface $entityManager, SerializerInterface $serializer, UserInterface $user) {
+    public function getById($id, EntityManagerInterface $entityManager, SerializerInterface $serializer, UserInterface $user = null) {
         $family = $entityManager->getRepository(Family::class)->findByIdBelongToWarden($id, $user->getId());
 
         if(!$family) {
