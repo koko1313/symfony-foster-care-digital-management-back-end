@@ -58,7 +58,7 @@ class FamilyController extends AbstractController {
      * @IsGranted(Roles::ROLE_OEPG)
      */
     public function register(Request $req, EntityManagerInterface $entityManager, SerializerInterface $serializer) {
-        $titular = $req->get("titular");
+        $titular = $req->get("titular"); // "man" || "woman"
         $womanFirstName = $req->get("womanFirstName");
         $womanSecondName = $req->get("womanSecondName");
         $womanLastName = $req->get("womanLastName");
@@ -120,7 +120,7 @@ class FamilyController extends AbstractController {
      * @IsGranted(Roles::ROLE_OEPG)
      */
     public function update($id, Request $req, EntityManagerInterface $entityManager, SerializerInterface $serializer) {
-        $titular = $req->get("titular");
+        $titular = $req->get("titular"); // "man" || "woman"
         $womanFirstName = $req->get("womanFirstName");
         $womanSecondName = $req->get("womanSecondName");
         $womanLastName = $req->get("womanLastName");
