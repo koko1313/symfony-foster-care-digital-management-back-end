@@ -2,10 +2,14 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FamilyRepository")
+ * @JMS\ExclusionPolicy("none")
  */
 class Family {
 
@@ -90,6 +94,17 @@ class Family {
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $address;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\FamilyMember", mappedBy="family")
+     * @JMS\Exclude()
+     */
+    private $familyMembers;
+
+    public function __construct()
+    {
+        $this->familyMembers = new ArrayCollection();
+    }
 
     public function getId() {
         return $this->id;
@@ -241,6 +256,37 @@ class Family {
     public function setAddress(?string $address): self
     {
         $this->address = $address;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|FamilyMember[]
+     */
+    public function getFamilyMembers(): Collection
+    {
+        return $this->familyMembers;
+    }
+
+    public function addFamilyMember(FamilyMember $familyMember): self
+    {
+        if (!$this->familyMembers->contains($familyMember)) {
+            $this->familyMembers[] = $familyMember;
+            $familyMember->setFamily($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFamilyMember(FamilyMember $familyMember): self
+    {
+        if ($this->familyMembers->contains($familyMember)) {
+            $this->familyMembers->removeElement($familyMember);
+            // set the owning side to null (unless already changed)
+            if ($familyMember->getFamily() === $this) {
+                $familyMember->setFamily(null);
+            }
+        }
 
         return $this;
     }

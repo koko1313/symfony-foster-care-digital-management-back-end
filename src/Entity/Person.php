@@ -10,7 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\DiscriminatorMap({
  *     "administrator" = "Administrator",
  *     "user" = "User",
- *     "employeeOEPG" = "EmployeeOEPG"
+ *     "employeeOEPG" = "EmployeeOEPG",
+ *     "familyMember" = "FamilyMember",
+ *     "fosterParent" = "FosterParent"
  * })
  */
 abstract class Person
@@ -21,6 +23,11 @@ abstract class Person
      * @ORM\Column(type="integer")
      */
     private $id;
+
+    /**
+     * @ORM\Column(type="string", length=10)
+     */
+    private $egn;
 
     /**
      * @ORM\Column(type="string", length=50)
@@ -36,6 +43,21 @@ abstract class Person
      * @ORM\Column(type="string", length=50)
      */
     private $lastName;
+
+    /**
+     * @ORM\Column(type="string", length=20)
+     */
+    private $phone;
+
+    /**
+     * @ORM\Column(type="string", length=20)
+     */
+    private $gender;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $birthDate;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Region", inversedBy="people")
@@ -60,9 +82,31 @@ abstract class Person
      */
     private $address;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $education;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $work;
+
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getEgn(): ?string
+    {
+        return $this->egn;
+    }
+
+    public function setEgn(string $egn): self
+    {
+        $this->egn = $egn;
+
+        return $this;
     }
 
     public function getFirstName(): ?string
@@ -90,13 +134,49 @@ abstract class Person
     }
 
     public function getLastName(): ?string
-    {
-        return $this->lastName;
-    }
+{
+    return $this->lastName;
+}
 
     public function setLastName(string $lastName): self
     {
         $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getGender(): ?string
+    {
+        return $this->gender;
+    }
+
+    public function setGender(string $gender): self
+    {
+        $this->gender = $gender;
+
+        return $this;
+    }
+
+    public function getBirthDate(): ?\DateTimeInterface
+    {
+        return $this->birthDate;
+    }
+
+    public function setBirthDate(?\DateTimeInterface $birthDate): self
+    {
+        $this->birthDate = $birthDate;
 
         return $this;
     }
@@ -145,6 +225,30 @@ abstract class Person
     public function setAddress(?string $address): self
     {
         $this->address = $address;
+
+        return $this;
+    }
+
+    public function getEducation(): ?string
+    {
+        return $this->education;
+    }
+
+    public function setEducation(string $education): self
+    {
+        $this->education = $education;
+
+        return $this;
+    }
+
+    public function getWork(): ?string
+    {
+        return $this->work;
+    }
+
+    public function setWork(string $work): self
+    {
+        $this->work = $work;
 
         return $this;
     }
