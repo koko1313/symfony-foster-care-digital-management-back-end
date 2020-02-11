@@ -77,6 +77,16 @@ class Family {
     private $address;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $levelOfBulgarianLanguage;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $religion;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\FamilyMember", mappedBy="family")
      * @JMS\Exclude()
      */
@@ -207,6 +217,30 @@ class Family {
     public function setAddress(?string $address): self
     {
         $this->address = $address;
+
+        return $this;
+    }
+
+    public function getLevelOfBulgarianLanguage(): ?string
+    {
+        return $this->levelOfBulgarianLanguage;
+    }
+
+    public function setLevelOfBulgarianLanguage(?string $levelOfBulgarianLanguage): self
+    {
+        $this->levelOfBulgarianLanguage = $levelOfBulgarianLanguage;
+
+        return $this;
+    }
+
+    public function getReligion(): ?string
+    {
+        return $this->religion;
+    }
+
+    public function setReligion(?string $religion): self
+    {
+        $this->religion = $religion;
 
         return $this;
     }

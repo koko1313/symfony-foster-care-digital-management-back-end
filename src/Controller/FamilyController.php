@@ -68,6 +68,7 @@ class FamilyController extends AbstractController {
         $womanPhone = $req->get("womanPhone");
         $womanEducation = $req->get("womanEducation");
         $womanWork = $req->get("womanWork");
+        $womanCitizenship = $req->get("womanCitizenship");
 
         $manFirstName = $req->get("manFirstName");
         $manSecondName = $req->get("manSecondName");
@@ -76,14 +77,20 @@ class FamilyController extends AbstractController {
         $manPhone = $req->get("manPhone");
         $manEducation = $req->get("manEducation");
         $manWork = $req->get("manWork");
+        $manCitizenship = $req->get("manCitizenship");
 
         $preferKidGender = $req->get("preferKidGender");
         $preferKidMinAge = $req->get("preferKidMinAge");
         $preferKidMaxAge = $req->get("preferKidMaxAge");
+
         $regionId = $req->get("regionId");
         $subRegionId = $req->get("subRegionId");
         $cityId = $req->get("cityId");
         $address = $req->get("address");
+
+        $levelOfBulgarianLanguage = $req->get("levelOfBulgarianLanguage");
+        $religion = $req->get("religion");
+
         $wardenId = $req->get("wardenId");
 
         $womanIsEmpty = Validator::checkEmptyFields([$womanFirstName, $womanSecondName, $womanLastName, $womanEgn, $womanPhone, $womanEducation]);
@@ -108,6 +115,7 @@ class FamilyController extends AbstractController {
             $woman->setPhone($womanPhone);
             $woman->setEducation($womanEducation);
             $woman->setWork($womanWork);
+            $woman->setCitizenship($womanCitizenship);
 
             $family->setWoman($woman);
         }
@@ -121,6 +129,7 @@ class FamilyController extends AbstractController {
             $man->setPhone($manPhone);
             $man->setEducation($manEducation);
             $man->setWork($manWork);
+            $man->setCitizenship($manCitizenship);
 
             $family->setMan($man);
         }
@@ -139,6 +148,9 @@ class FamilyController extends AbstractController {
         $family->setCity($city);
 
         $family->setAddress($address);
+
+        $family->setLevelOfBulgarianLanguage($levelOfBulgarianLanguage);
+        $family->setReligion($religion);
 
         $warden = $entityManager->getRepository(EmployeeOEPG::class)->find($wardenId);
         $family->setWarden($warden);
@@ -165,6 +177,7 @@ class FamilyController extends AbstractController {
         $womanPhone = $req->get("womanPhone");
         $womanEducation = $req->get("womanEducation");
         $womanWork = $req->get("womanWork");
+        $womanCitizenship = $req->get("womanCitizenship");
 
         $manFirstName = $req->get("manFirstName");
         $manSecondName = $req->get("manSecondName");
@@ -173,14 +186,20 @@ class FamilyController extends AbstractController {
         $manPhone = $req->get("manPhone");
         $manEducation = $req->get("manEducation");
         $manWork = $req->get("manWork");
+        $manCitizenship = $req->get("manCitizenship");
 
         $preferKidGender = $req->get("preferKidGender");
         $preferKidMinAge = $req->get("preferKidMinAge");
         $preferKidMaxAge = $req->get("preferKidMaxAge");
+
         $regionId = $req->get("regionId");
         $subRegionId = $req->get("subRegionId");
         $cityId = $req->get("cityId");
         $address = $req->get("address");
+
+        $levelOfBulgarianLanguage = $req->get("levelOfBulgarianLanguage");
+        $religion = $req->get("religion");
+
         $wardenId = $req->get("wardenId");
 
         $womanIsEmpty = Validator::checkEmptyFields([$womanFirstName, $womanSecondName, $womanLastName, $womanEgn, $womanPhone, $womanEducation]);
@@ -206,6 +225,7 @@ class FamilyController extends AbstractController {
             $woman->setPhone($womanPhone);
             $woman->setEducation($womanEducation);
             $woman->setWork($womanWork);
+            $woman->setCitizenship($womanCitizenship);
 
             $family->setWoman($woman);
         }
@@ -219,6 +239,7 @@ class FamilyController extends AbstractController {
             $man->setPhone($manPhone);
             $man->setEducation($manEducation);
             $man->setWork($manWork);
+            $man->setCitizenship($manCitizenship);
 
             $family->setMan($man);
         }
@@ -237,6 +258,9 @@ class FamilyController extends AbstractController {
         $family->setCity($city);
 
         $family->setAddress($address);
+
+        $family->setLevelOfBulgarianLanguage($levelOfBulgarianLanguage);
+        $family->setReligion($religion);
 
         $warden = $entityManager->getRepository(EmployeeOEPG::class)->find($wardenId);
         $family->setWarden($warden);

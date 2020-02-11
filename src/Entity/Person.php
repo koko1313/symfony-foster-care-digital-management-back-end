@@ -89,6 +89,11 @@ abstract class Person
      */
     private $work;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $citizenship;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -246,6 +251,18 @@ abstract class Person
     public function setWork(string $work): self
     {
         $this->work = $work;
+
+        return $this;
+    }
+
+    public function getCitizenship(): ?string
+    {
+        return $this->citizenship;
+    }
+
+    public function setCitizenship(?string $citizenship): self
+    {
+        $this->citizenship = $citizenship;
 
         return $this;
     }
