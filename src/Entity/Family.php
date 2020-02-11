@@ -26,34 +26,14 @@ class Family {
     private $titular;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\OneToOne(targetEntity="App\Entity\FosterParent", cascade={"persist", "remove"})
      */
-    private $womanFirstName;
+    private $woman;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\OneToOne(targetEntity="App\Entity\FosterParent", cascade={"persist", "remove"})
      */
-    private $womanSecondName;
-
-    /**
-     * @ORM\Column(type="string", length=50)
-     */
-    private $womanLastName;
-
-    /**
-     * @ORM\Column(type="string", length=50)
-     */
-    private $manFirstName;
-
-    /**
-     * @ORM\Column(type="string", length=50)
-     */
-    private $manSecondName;
-
-    /**
-     * @ORM\Column(type="string", length=50)
-     */
-    private $manLastName;
+    private $man;
 
     /**
      * @ORM\Column(type="string", length=1, nullable=true)
@@ -119,57 +99,27 @@ class Family {
         return $this;
     }
 
-    public function getWomanFirstName() {
-        return $this->womanFirstName;
+    public function getWoman(): ?FosterParent
+    {
+        return $this->woman;
     }
 
-    public function setWomanFirstName(string $womanFirstName) {
-        $this->womanFirstName = $womanFirstName;
+    public function setWoman(?FosterParent $woman): self
+    {
+        $this->woman = $woman;
+
         return $this;
     }
 
-    public function getWomanSecondName() {
-        return $this->womanSecondName;
+    public function getMan(): ?FosterParent
+    {
+        return $this->man;
     }
 
-    public function setWomanSecondName(string $womanSecondName) {
-        $this->womanSecondName = $womanSecondName;
-        return $this;
-    }
+    public function setMan(?FosterParent $man): self
+    {
+        $this->man = $man;
 
-    public function getWomanLastName() {
-        return $this->womanLastName;
-    }
-
-    public function setWomanLastName(string $womanLastName) {
-        $this->womanLastName = $womanLastName;
-        return $this;
-    }
-
-    public function getManFirstName() {
-        return $this->manFirstName;
-    }
-
-    public function setManFirstName(string $manFirstName) {
-        $this->manFirstName = $manFirstName;
-        return $this;
-    }
-
-    public function getManSecondName() {
-        return $this->manSecondName;
-    }
-
-    public function setManSecondName(string $manSecondName) {
-        $this->manSecondName = $manSecondName;
-        return $this;
-    }
-
-    public function getManLastName() {
-        return $this->manLastName;
-    }
-
-    public function setManLastName(string $manLastName) {
-        $this->manLastName = $manLastName;
         return $this;
     }
 

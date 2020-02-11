@@ -25,7 +25,7 @@ abstract class Person
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=10)
+     * @ORM\Column(type="string", length=10, nullable=true)
      */
     private $egn;
 
@@ -45,12 +45,12 @@ abstract class Person
     private $lastName;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $phone;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $gender;
 
@@ -61,19 +61,16 @@ abstract class Person
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Region", inversedBy="people")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $region;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\SubRegion", inversedBy="people")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $subRegion;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\City", inversedBy="people")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $city;
 
@@ -83,12 +80,12 @@ abstract class Person
     private $address;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $education;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $work;
 

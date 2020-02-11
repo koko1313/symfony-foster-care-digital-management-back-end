@@ -33,15 +33,6 @@ class AdministratorFixtures extends Fixture implements DependentFixtureInterface
         $user->setSecondName("");
         $user->setLastName("");
 
-        $sofiaRegion = $manager->getRepository(Region::class)->findOneBy(["name" => "София"]);
-        $user->setRegion($sofiaRegion);
-
-        $sofiaSubRegion = $manager->getRepository(SubRegion::class)->findOneBy(["name" => "София"]);
-        $user->setSubRegion($sofiaSubRegion);
-
-        $sofiaCity = $manager->getRepository(City::class)->findOneBy(["name" => "София"]);
-        $user->setCity($sofiaCity);
-
         $manager->persist($user);
 
         $manager->flush();

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\City;
 use App\Entity\EmployeeOEPG;
 use App\Entity\Family;
+use App\Entity\FosterParent;
 use App\Entity\Region;
 use App\Entity\SubRegion;
 use App\Helpers\Validator;
@@ -74,21 +75,30 @@ class FamilyController extends AbstractController {
         $address = $req->get("address");
         $wardenId = $req->get("wardenId");
 
-        if(Validator::checkEmptyFields([$titular, $womanFirstName, $womanSecondName, $womanLastName, $manFirstName, $manSecondName, $manLastName])) {
+        $womanIsEmpty = Validator::checkEmptyFields([$womanFirstName, $womanSecondName, $womanLastName]);
+        $manIsEmpty = Validator::checkEmptyFields([$manFirstName, $manSecondName, $manLastName]);
+
+        if(Validator::checkEmptyFields([$titular]) || $womanIsEmpty && $manIsEmpty) {
             return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
         }
 
         if($preferKidMinAge == "") $preferKidMinAge = null;
         if($preferKidMaxAge == "") $preferKidMaxAge = null;
 
+        $woman = new FosterParent();
+        $woman->setFirstName($womanFirstName);
+        $woman->setSecondName($womanSecondName);
+        $woman->setLastName($womanLastName);
+
+        $man = new FosterParent();
+        $man->setFirstName($manFirstName);
+        $man->setSecondName($manSecondName);
+        $man->setLastName($manLastName);
+
         $family = new Family();
         $family->setTitular($titular);
-        $family->setWomanFirstName($womanFirstName);
-        $family->setWomanSecondName($womanSecondName);
-        $family->setWomanLastName($womanLastName);
-        $family->setManFirstName($manFirstName);
-        $family->setManSecondName($manSecondName);
-        $family->setManLastName($manLastName);
+        $family->setWoman($woman);
+        $family->setMan($man);
         $family->setPreferKidGender($preferKidGender);
         $family->setPreferKidMinAge($preferKidMinAge);
         $family->setPreferKidMaxAge($preferKidMaxAge);
@@ -136,22 +146,31 @@ class FamilyController extends AbstractController {
         $address = $req->get("address");
         $wardenId = $req->get("wardenId");
 
-        if(Validator::checkEmptyFields([$titular, $womanFirstName, $womanSecondName, $womanLastName, $manFirstName, $manSecondName, $manLastName])) {
+        $womanIsEmpty = Validator::checkEmptyFields([$womanFirstName, $womanSecondName, $womanLastName]);
+        $manIsEmpty = Validator::checkEmptyFields([$manFirstName, $manSecondName, $manLastName]);
+
+        if(Validator::checkEmptyFields([$titular]) || $womanIsEmpty && $manIsEmpty) {
             return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
         }
 
         if($preferKidMinAge == "") $preferKidMinAge = null;
         if($preferKidMaxAge == "") $preferKidMaxAge = null;
 
+        $woman = new FosterParent();
+        $woman->setFirstName($womanFirstName);
+        $woman->setSecondName($womanSecondName);
+        $woman->setLastName($womanLastName);
+
+        $man = new FosterParent();
+        $man->setFirstName($manFirstName);
+        $man->setSecondName($manSecondName);
+        $man->setLastName($manLastName);
+
         $family = $entityManager->getRepository(Family::class)->find($id);
 
         $family->setTitular($titular);
-        $family->setWomanFirstName($womanFirstName);
-        $family->setWomanSecondName($womanSecondName);
-        $family->setWomanLastName($womanLastName);
-        $family->setManFirstName($manFirstName);
-        $family->setManSecondName($manSecondName);
-        $family->setManLastName($manLastName);
+        $family->setWoman($woman);
+        $family->setMan($man);
         $family->setPreferKidGender($preferKidGender);
         $family->setPreferKidMinAge($preferKidMinAge);
         $family->setPreferKidMaxAge($preferKidMaxAge);
