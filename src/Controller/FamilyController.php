@@ -60,12 +60,23 @@ class FamilyController extends AbstractController {
      */
     public function register(Request $req, EntityManagerInterface $entityManager, SerializerInterface $serializer) {
         $titular = $req->get("titular"); // "man" || "woman"
+
         $womanFirstName = $req->get("womanFirstName");
         $womanSecondName = $req->get("womanSecondName");
         $womanLastName = $req->get("womanLastName");
+        $womanEgn = $req->get("womanEgn");
+        $womanPhone = $req->get("womanPhone");
+        $womanEducation = $req->get("womanEducation");
+        $womanWork = $req->get("womanWork");
+
         $manFirstName = $req->get("manFirstName");
         $manSecondName = $req->get("manSecondName");
         $manLastName = $req->get("manLastName");
+        $manEgn = $req->get("manEgn");
+        $manPhone = $req->get("manPhone");
+        $manEducation = $req->get("manEducation");
+        $manWork = $req->get("manWork");
+
         $preferKidGender = $req->get("preferKidGender");
         $preferKidMinAge = $req->get("preferKidMinAge");
         $preferKidMaxAge = $req->get("preferKidMaxAge");
@@ -75,8 +86,8 @@ class FamilyController extends AbstractController {
         $address = $req->get("address");
         $wardenId = $req->get("wardenId");
 
-        $womanIsEmpty = Validator::checkEmptyFields([$womanFirstName, $womanSecondName, $womanLastName]);
-        $manIsEmpty = Validator::checkEmptyFields([$manFirstName, $manSecondName, $manLastName]);
+        $womanIsEmpty = Validator::checkEmptyFields([$womanFirstName, $womanSecondName, $womanLastName, $womanEgn, $womanPhone, $womanEducation]);
+        $manIsEmpty = Validator::checkEmptyFields([$manFirstName, $manSecondName, $manLastName, $manEgn, $manPhone, $manEducation]);
 
         if(Validator::checkEmptyFields([$titular]) || $womanIsEmpty && $manIsEmpty) {
             return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
@@ -85,20 +96,35 @@ class FamilyController extends AbstractController {
         if($preferKidMinAge == "") $preferKidMinAge = null;
         if($preferKidMaxAge == "") $preferKidMaxAge = null;
 
-        $woman = new FosterParent();
-        $woman->setFirstName($womanFirstName);
-        $woman->setSecondName($womanSecondName);
-        $woman->setLastName($womanLastName);
-
-        $man = new FosterParent();
-        $man->setFirstName($manFirstName);
-        $man->setSecondName($manSecondName);
-        $man->setLastName($manLastName);
-
         $family = new Family();
         $family->setTitular($titular);
-        $family->setWoman($woman);
-        $family->setMan($man);
+
+        if(!$womanIsEmpty) {
+            $woman = new FosterParent();
+            $woman->setFirstName($womanFirstName);
+            $woman->setSecondName($womanSecondName);
+            $woman->setLastName($womanLastName);
+            $woman->setEgn($womanEgn);
+            $woman->setPhone($womanPhone);
+            $woman->setEducation($womanEducation);
+            $woman->setWork($womanWork);
+
+            $family->setWoman($woman);
+        }
+
+        if(!$manIsEmpty) {
+            $man = new FosterParent();
+            $man->setFirstName($manFirstName);
+            $man->setSecondName($manSecondName);
+            $man->setLastName($manLastName);
+            $man->setEgn($manEgn);
+            $man->setPhone($manPhone);
+            $man->setEducation($manEducation);
+            $man->setWork($manWork);
+
+            $family->setMan($man);
+        }
+
         $family->setPreferKidGender($preferKidGender);
         $family->setPreferKidMinAge($preferKidMinAge);
         $family->setPreferKidMaxAge($preferKidMaxAge);
@@ -131,12 +157,23 @@ class FamilyController extends AbstractController {
      */
     public function update($id, Request $req, EntityManagerInterface $entityManager, SerializerInterface $serializer) {
         $titular = $req->get("titular"); // "man" || "woman"
+
         $womanFirstName = $req->get("womanFirstName");
         $womanSecondName = $req->get("womanSecondName");
         $womanLastName = $req->get("womanLastName");
+        $womanEgn = $req->get("womanEgn");
+        $womanPhone = $req->get("womanPhone");
+        $womanEducation = $req->get("womanEducation");
+        $womanWork = $req->get("womanWork");
+
         $manFirstName = $req->get("manFirstName");
         $manSecondName = $req->get("manSecondName");
         $manLastName = $req->get("manLastName");
+        $manEgn = $req->get("manEgn");
+        $manPhone = $req->get("manPhone");
+        $manEducation = $req->get("manEducation");
+        $manWork = $req->get("manWork");
+
         $preferKidGender = $req->get("preferKidGender");
         $preferKidMinAge = $req->get("preferKidMinAge");
         $preferKidMaxAge = $req->get("preferKidMaxAge");
@@ -146,8 +183,8 @@ class FamilyController extends AbstractController {
         $address = $req->get("address");
         $wardenId = $req->get("wardenId");
 
-        $womanIsEmpty = Validator::checkEmptyFields([$womanFirstName, $womanSecondName, $womanLastName]);
-        $manIsEmpty = Validator::checkEmptyFields([$manFirstName, $manSecondName, $manLastName]);
+        $womanIsEmpty = Validator::checkEmptyFields([$womanFirstName, $womanSecondName, $womanLastName, $womanEgn, $womanPhone, $womanEducation]);
+        $manIsEmpty = Validator::checkEmptyFields([$manFirstName, $manSecondName, $manLastName, $manEgn, $manPhone, $manEducation]);
 
         if(Validator::checkEmptyFields([$titular]) || $womanIsEmpty && $manIsEmpty) {
             return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
@@ -156,21 +193,36 @@ class FamilyController extends AbstractController {
         if($preferKidMinAge == "") $preferKidMinAge = null;
         if($preferKidMaxAge == "") $preferKidMaxAge = null;
 
-        $woman = new FosterParent();
-        $woman->setFirstName($womanFirstName);
-        $woman->setSecondName($womanSecondName);
-        $woman->setLastName($womanLastName);
-
-        $man = new FosterParent();
-        $man->setFirstName($manFirstName);
-        $man->setSecondName($manSecondName);
-        $man->setLastName($manLastName);
-
         $family = $entityManager->getRepository(Family::class)->find($id);
 
         $family->setTitular($titular);
-        $family->setWoman($woman);
-        $family->setMan($man);
+
+        if(!$womanIsEmpty) {
+            $woman = new FosterParent();
+            $woman->setFirstName($womanFirstName);
+            $woman->setSecondName($womanSecondName);
+            $woman->setLastName($womanLastName);
+            $woman->setEgn($womanEgn);
+            $woman->setPhone($womanPhone);
+            $woman->setEducation($womanEducation);
+            $woman->setWork($womanWork);
+
+            $family->setWoman($woman);
+        }
+
+        if(!$manIsEmpty) {
+            $man = new FosterParent();
+            $man->setFirstName($manFirstName);
+            $man->setSecondName($manSecondName);
+            $man->setLastName($manLastName);
+            $man->setEgn($manEgn);
+            $man->setPhone($manPhone);
+            $man->setEducation($manEducation);
+            $man->setWork($manWork);
+
+            $family->setMan($man);
+        }
+
         $family->setPreferKidGender($preferKidGender);
         $family->setPreferKidMinAge($preferKidMinAge);
         $family->setPreferKidMaxAge($preferKidMaxAge);

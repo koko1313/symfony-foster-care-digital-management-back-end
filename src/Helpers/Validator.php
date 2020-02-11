@@ -10,7 +10,7 @@ class Validator {
      */
     static function checkEmptyFields($fields) {
         foreach ($fields as $field) {
-            if($field == null) {
+            if($field == null || $field == "") {
                 return true;
             }
         }

@@ -52,6 +52,7 @@ class Family {
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\EmployeeOEPG", inversedBy="families")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $warden;
 
