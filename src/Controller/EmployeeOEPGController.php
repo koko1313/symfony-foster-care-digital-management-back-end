@@ -8,6 +8,7 @@ use App\Entity\EmployeeOEPG;
 use App\Entity\Position;
 use App\Entity\Region;
 use App\Entity\SubRegion;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -65,12 +66,13 @@ class EmployeeOEPGController extends UsersController {
         $regionId = $req->get("regionId");
         $subRegionId = $req->get("subRegionId");
         $cityId = $req->get("cityId");
+        $address = $req->get("address");
 
-        if(Validator::checkEmptyFields([$email, $password, $firstName, $secondName, $lastName, $regionId, $subRegionId, $cityId])) {
+        if(Validator::checkEmptyFields([$email, $password, $firstName, $secondName, $lastName, $regionId, $subRegionId, $cityId, $address])) {
             return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
         }
 
-        $userWithThisEmail = $entityManager->getRepository(EmployeeOEPG::class)->findOneBy(["email" => $email]);
+        $userWithThisEmail = $entityManager->getRepository(User::class)->findOneBy(["email" => $email]);
 
         if($userWithThisEmail) {
             return new Response(null, Response::HTTP_CONFLICT);
@@ -102,6 +104,8 @@ class EmployeeOEPGController extends UsersController {
         $city = $entityManager->getRepository(City::class)->findOneBy(["id" => $cityId]);
         $user->setCity($city);
 
+        $user->setAddress($address);
+
         $entityManager->persist($user);
 
         $entityManager->flush();
@@ -124,9 +128,16 @@ class EmployeeOEPGController extends UsersController {
         $regionId = $req->get("regionId");
         $subRegionId = $req->get("subRegionId");
         $cityId = $req->get("cityId");
+        $address = $req->get("address");
 
-        if(Validator::checkEmptyFields([$email, $firstName, $secondName, $lastName, $regionId, $subRegionId, $cityId])) {
+        if(Validator::checkEmptyFields([$email, $firstName, $secondName, $lastName, $regionId, $subRegionId, $cityId, $address])) {
             return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
+        }
+
+        $userWithThisEmail = $entityManager->getRepository(User::class)->findOneBy(["email" => $email]);
+
+        if($userWithThisEmail && $userWithThisEmail->getId() != $id) {
+            return new Response(null, Response::HTTP_CONFLICT);
         }
 
         $user = $entityManager->getRepository(EmployeeOEPG::class)->find($userId);
@@ -148,6 +159,8 @@ class EmployeeOEPGController extends UsersController {
 
         $city = $entityManager->getRepository(City::class)->find($cityId);
         $user->setCity($city);
+
+        $user->setAddress($address);
 
         $entityManager->flush();
 

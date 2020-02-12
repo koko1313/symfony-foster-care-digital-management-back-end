@@ -109,6 +109,8 @@ class FamilyController extends AbstractController {
 
         if($preferKidMinAge == "") $preferKidMinAge = null;
         if($preferKidMaxAge == "") $preferKidMaxAge = null;
+        if($averageMonthlyIncomePerFamilyMember == "") $averageMonthlyIncomePerFamilyMember = null;
+        if($anotherIncome == "") $anotherIncome = null;
 
         $family = new Family();
         $family->setTitular($titular);
@@ -232,6 +234,8 @@ class FamilyController extends AbstractController {
 
         if($preferKidMinAge == "") $preferKidMinAge = null;
         if($preferKidMaxAge == "") $preferKidMaxAge = null;
+        if($averageMonthlyIncomePerFamilyMember == "") $averageMonthlyIncomePerFamilyMember = null;
+        if($anotherIncome == "") $anotherIncome = null;
 
         $family = $entityManager->getRepository(Family::class)->find($id);
 
