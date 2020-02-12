@@ -2,6 +2,6 @@
 
 namespace App\Constants;
 
-abstract class Positions {
+final class Positions {
     const POSITION_OEPG = "ОЕПГ";
 }
