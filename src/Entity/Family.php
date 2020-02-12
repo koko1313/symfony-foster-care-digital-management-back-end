@@ -79,12 +79,42 @@ class Family {
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
+    private $language;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
     private $levelOfBulgarianLanguage;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $religion;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $familyType; // professional, volunteer
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $averageMonthlyIncomePerFamilyMember;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $houseType;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $employmentType;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $anotherIncome;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\FamilyMember", mappedBy="family")
@@ -221,6 +251,18 @@ class Family {
         return $this;
     }
 
+    public function getLanguage(): ?string
+    {
+        return $this->language;
+    }
+
+    public function setLanguage(?string $language): self
+    {
+        $this->language = $language;
+
+        return $this;
+    }
+
     public function getLevelOfBulgarianLanguage(): ?string
     {
         return $this->levelOfBulgarianLanguage;
@@ -241,6 +283,66 @@ class Family {
     public function setReligion(?string $religion): self
     {
         $this->religion = $religion;
+
+        return $this;
+    }
+
+    public function getFamilyType(): ?string
+    {
+        return $this->familyType;
+    }
+
+    public function setFamilyType(?string $familyType): self
+    {
+        $this->familyType = $familyType;
+
+        return $this;
+    }
+
+    public function getAverageMonthlyIncomePerFamilyMember(): ?float
+    {
+        return $this->averageMonthlyIncomePerFamilyMember;
+    }
+
+    public function setAverageMonthlyIncomePerFamilyMember(?float $averageMonthlyIncomePerFamilyMember): self
+    {
+        $this->averageMonthlyIncomePerFamilyMember = $averageMonthlyIncomePerFamilyMember;
+
+        return $this;
+    }
+
+    public function getHouseType(): ?string
+    {
+        return $this->houseType;
+    }
+
+    public function setHouseType(?string $houseType): self
+    {
+        $this->houseType = $houseType;
+
+        return $this;
+    }
+
+    public function getEmploymentType(): ?string
+    {
+        return $this->employmentType;
+    }
+
+    public function setEmploymentType(?string $employmentType): self
+    {
+        $this->employmentType = $employmentType;
+
+        return $this;
+    }
+
+    public function getAnotherIncome(): ?float
+    {
+        return $this->anotherIncome;
+    }
+
+    public function setAnotherIncome(?float $anotherIncome): self
+    {
+        $this->anotherIncome = $anotherIncome;
 
         return $this;
     }
