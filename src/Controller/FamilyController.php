@@ -80,7 +80,7 @@ class FamilyController extends AbstractController {
         $manPhone = $req->get("manPhone");
         $manEducation = $req->get("manEducation");
         $manWork = $req->get("manWork");
-        $manEmploymentType = $req->get("employmentType");
+        $manEmploymentType = $req->get("manEmploymentType");
         $manCitizenship = $req->get("manCitizenship");
 
         $preferKidGender = $req->get("preferKidGender");
@@ -106,7 +106,7 @@ class FamilyController extends AbstractController {
         $womanIsEmpty = Validator::checkEmptyFields([$womanFirstName, $womanSecondName, $womanLastName, $womanEgn, $womanPhone, $womanEducation]);
         $manIsEmpty = Validator::checkEmptyFields([$manFirstName, $manSecondName, $manLastName, $manEgn, $manPhone, $manEducation]);
 
-        if(Validator::checkEmptyFields([$titular]) || $womanIsEmpty && $manIsEmpty) {
+        if(Validator::checkEmptyFields([$titular, $regionId, $subRegionId, $cityId, $address]) || $womanIsEmpty && $manIsEmpty) {
             return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
         }
 
@@ -233,7 +233,7 @@ class FamilyController extends AbstractController {
         $womanIsEmpty = Validator::checkEmptyFields([$womanFirstName, $womanSecondName, $womanLastName, $womanEgn, $womanPhone, $womanEducation]);
         $manIsEmpty = Validator::checkEmptyFields([$manFirstName, $manSecondName, $manLastName, $manEgn, $manPhone, $manEducation]);
 
-        if(Validator::checkEmptyFields([$titular]) || $womanIsEmpty && $manIsEmpty) {
+        if(Validator::checkEmptyFields([$titular, $regionId, $subRegionId, $cityId, $address]) || $womanIsEmpty && $manIsEmpty) {
             return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
         }
 
@@ -259,6 +259,8 @@ class FamilyController extends AbstractController {
             $woman->setCitizenship($womanCitizenship);
 
             $family->setWoman($woman);
+        } else {
+            $family->setWoman(null);
         }
 
         if(!$manIsEmpty) {
@@ -274,6 +276,8 @@ class FamilyController extends AbstractController {
             $man->setCitizenship($manCitizenship);
 
             $family->setMan($man);
+        } else {
+            $family->setMan(null);
         }
 
         $family->setPreferKidGender($preferKidGender);

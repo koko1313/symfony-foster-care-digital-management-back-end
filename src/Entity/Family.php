@@ -26,12 +26,12 @@ class Family {
     private $titular;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\FosterParent", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\FosterParent", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $woman;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\FosterParent", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\FosterParent", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $man;
 
