@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Family;
+use Doctrine\ORM\EntityManagerInterface;
 use Dompdf\Dompdf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -13,11 +15,11 @@ use App\Constants\Roles;
 class TestController extends AbstractController {
 
     /**
-     * @Route("/protected-test", methods={"GET", "POST"})
-     * @IsGranted(Roles::ROLE_ADMIN)
+     * @Route("/test", methods={"GET", "POST"})
      */
-    public function sad() {
-        return new Response("assda");
+    public function sad(EntityManagerInterface $entityManager) {
+        $family = $entityManager->getRepository(Family::class)->find(13);
+        return $this->render("DocumentTemplates/FamilyApplication.html.twig", ["family" => $family]);
     }
 
     /**

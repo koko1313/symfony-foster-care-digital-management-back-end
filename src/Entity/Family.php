@@ -36,7 +36,7 @@ class Family {
     private $man;
 
     /**
-     * @ORM\Column(type="string", length=1, nullable=true)
+     * @ORM\Column(type="string", length=20, nullable=true)
      */
     private $preferKidGender;
 

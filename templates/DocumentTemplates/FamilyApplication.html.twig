@@ -1,0 +1,106 @@
+{%  extends "base.html.twig" %}
+
+{% block title %} Заявление {% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .heading-1 {
+            font-size: 18pt;
+            font-weight: bold;
+            text-align: center;
+        }
+        .heading-2 {
+            font-size: 14pt;
+            font-weight: bold;
+        }
+        .heading-3 {
+            font-weight: bold;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    {% if family.titular == "woman" %}
+        {% set titular = family.woman %}
+        {% set anotherParent = family.man %}
+    {% elseif family.titular == "man" %}
+        {% set titular = family.man %}
+        {% set anotherParent = family.woman %}
+    {% endif %}
+
+    <p class="heading-1">ЗАЯВЛЕНИЕ</p>
+
+    <p>
+        <span class="heading-2">1. Кандидат:</span> <br />
+            <span class="heading-3">Име, презиме и фамилия:</span> {{ titular.firstName }} {{ titular.secondName }} {{ titular.lastName }} <br />
+            <span class="heading-3">ЕГН:</span> {{ titular.egn }} <br />
+            <span class="heading-3">Образование:</span> {{ titular.education }} <br />
+            <span class="heading-3">Месторабота:</span> {{ titular.work }} <br />
+            <span class="heading-3">Гражданство:</span> {{ titular.citizenship }} <br />
+            <span class="heading-3">Адрес:</span>
+                {% if family.city %}
+                    {{ family.city.name }},
+                {% endif %}
+
+                {% if family.subRegion %}
+                    {{ family.subRegion.name }},
+                {% endif %}
+
+                {% if family.region %}
+                    {{ family.region.name }},
+                {% endif %}
+
+                {{ family.address }}
+                <br />
+            <span class="heading-3">Телефон:</span> {{ titular.phone }} <br />
+            <span class="heading-3">На какъв език се говори в семейството:</span> {{ family.language }} <br />
+            <span class="heading-3">Владеете ли български език добре:</span> {{ family.levelOfBulgarianLanguage }} <br />
+            <span class="heading-3">Религия:</span> {{ family.religion }} <br />
+
+            {% if anotherParent %}
+                <span class="heading-2">Съпруг/а</span> <br />
+                <span class="heading-3">Име, презиме и фамилия:</span> {{ anotherParent.firstName }} {{ anotherParent.secondName }} {{ anotherParent.lastName }} <br />
+                <span class="heading-3">ЕГН:</span> {{ anotherParent.egn }} <br />
+                <span class="heading-3">Образование:</span> {{ anotherParent.education }} <br />
+                <span class="heading-3">Месторабота:</span> {{ anotherParent.work }}
+            {% endif %}
+    </p>
+
+    <p>
+        <span class="heading-2">2. Желая да предоставям приемна грижа като:</span> {{ family.familyType }} <br />
+    </p>
+
+    <p>
+        <span class="heading-2">3. Финансово и икономическо състояние:</span> <br />
+        <span class="heading-3">а) среден месечен доход на член от семейството (в лв.):</span> {{ family.averageMonthlyIncomePerFamilyMember }} <br />
+        <span class="heading-3">б) жилище: собствено/под наем, брой стаи:</span> {{ family.houseType }} <br />
+        <span class="heading-3">в) трудова заетост:</span> {{ titular.employmentType }} <br />
+        <span class="heading-3">г) доходи от други източници:</span> {{ family.anotherIncome }} <br />
+    </p>
+
+    <p>
+        <span class="heading-2">4. За какво дете бихте искали да се грижите?</span> <br />
+        <span class="heading-3">Пол:</span>
+            {% if family.preferKidGender %}
+                {{ family.preferKidGender }}
+            {% else %}
+                без значение
+            {% endif %}
+        <br />
+        <span class="heading-3">Възраст:</span>
+            {% if family.preferKidMinAge %}
+                от {{ family.preferKidMinAge }}
+            {% endif %}
+
+            {% if family.preferKidMaxAge %}
+                до {{ family.preferKidMaxAge }}
+            {% endif %}
+
+            {% if family.preferKidMinAge or family.preferKidMaxAge %}
+                години
+            {% endif %}
+        <br />
+    </p>
+
+{% endblock %}

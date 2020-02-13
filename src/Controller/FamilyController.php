@@ -10,6 +10,8 @@ use App\Entity\Region;
 use App\Entity\SubRegion;
 use App\Helpers\Validator;
 use Doctrine\ORM\EntityManagerInterface;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -90,6 +92,7 @@ class FamilyController extends AbstractController {
         $cityId = $req->get("cityId");
         $address = $req->get("address");
 
+        $language = $req->get("language");
         $levelOfBulgarianLanguage = $req->get("levelOfBulgarianLanguage");
         $religion = $req->get("religion");
 
@@ -160,6 +163,7 @@ class FamilyController extends AbstractController {
 
         $family->setAddress($address);
 
+        $family->setLanguage($language);
         $family->setLevelOfBulgarianLanguage($levelOfBulgarianLanguage);
         $family->setReligion($religion);
 
@@ -215,6 +219,7 @@ class FamilyController extends AbstractController {
         $cityId = $req->get("cityId");
         $address = $req->get("address");
 
+        $language = $req->get("language");
         $levelOfBulgarianLanguage = $req->get("levelOfBulgarianLanguage");
         $religion = $req->get("religion");
 
@@ -286,6 +291,7 @@ class FamilyController extends AbstractController {
 
         $family->setAddress($address);
 
+        $family->setLanguage($language);
         $family->setLevelOfBulgarianLanguage($levelOfBulgarianLanguage);
         $family->setReligion($religion);
 
@@ -326,6 +332,52 @@ class FamilyController extends AbstractController {
         }
 
         return new Response(null);
+    }
+
+    /**
+     * @Route("/createFamilyApplication/{id}", methods={"GET"})
+     * @IsGranted(Roles::ROLE_OEPG)
+     */
+    public function createFamilyApplicationPdf($id, EntityManagerInterface $entityManager) {
+        $family = $entityManager->getRepository(Family::class)->find($id);
+
+        if(!$family) {
+            return new Response(null, Response::HTTP_NOT_FOUND);
+        }
+
+        $dompdf = new Dompdf();
+
+        $html = $this->renderView('DocumentTemplates/FamilyApplication.html.twig', ["family" => $family]);
+
+        $dompdf->loadHtml($html, "windows-1251");
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        $pdf = $dompdf->output();
+
+        $publicDirectory = $this->getParameter('kernel.project_dir') . '/public/documents';
+
+        $documentName = $this->generateDocumentName($family);
+        $pdfFilepath =  $publicDirectory . '/'. $documentName .'.pdf';
+
+        file_put_contents($pdfFilepath, $pdf);
+
+        return new Response(null);
+    }
+
+    private function generateDocumentName(Family $family) {
+        $randomNumber = rand(100, 999);
+        $titular = "";
+
+        if($family->getTitular() == "woman") {
+            $titularFullName = $family->getWoman()->getFirstName() . "_" . $family->getWoman()->getSecondName() . "_" . $family->getWoman()->getLastName();
+            $titular = $titularFullName;
+        }
+        elseif($family->getTitular() == "man") {
+            $titularFullName = $family->getMan()->getFirstName() . "_" . $family->getMan()->getSecondName() . "_" . $family->getMan()->getLastName();
+            $titular = $titularFullName;
+        }
+
+        return $titular ."_". $randomNumber;
     }
 
 }
