@@ -18,6 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Constants\Roles;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @Route("family", name="family_")
@@ -58,55 +59,48 @@ class FamilyController extends AbstractController {
      * @Route("/register", methods={"POST"})
      * @IsGranted(Roles::ROLE_OEPG)
      */
-    public function register(Request $req, EntityManagerInterface $entityManager, SerializerInterface $serializer) {
-        $titular = $req->get("titular"); // "man" || "woman"
+    public function register(Request $req, EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator) {
+        $titular = trim($req->get("titular"));
 
-        $womanFirstName = $req->get("womanFirstName");
-        $womanSecondName = $req->get("womanSecondName");
-        $womanLastName = $req->get("womanLastName");
-        $womanEgn = $req->get("womanEgn");
-        $womanPhone = $req->get("womanPhone");
-        $womanEducation = $req->get("womanEducation");
-        $womanWork = $req->get("womanWork");
-        $womanEmploymentType = $req->get("womanEmploymentType");
-        $womanCitizenship = $req->get("womanCitizenship");
+        $womanFirstName = trim($req->get("womanFirstName"));
+        $womanSecondName = trim($req->get("womanSecondName"));
+        $womanLastName = trim($req->get("womanLastName"));
+        $womanEgn = trim($req->get("womanEgn"));
+        $womanPhone = trim($req->get("womanPhone"));
+        $womanEducation = trim($req->get("womanEducation"));
+        $womanWork = trim($req->get("womanWork"));
+        $womanEmploymentType = trim($req->get("womanEmploymentType"));
+        $womanCitizenship = trim($req->get("womanCitizenship"));
 
-        $manFirstName = $req->get("manFirstName");
-        $manSecondName = $req->get("manSecondName");
-        $manLastName = $req->get("manLastName");
-        $manEgn = $req->get("manEgn");
-        $manPhone = $req->get("manPhone");
-        $manEducation = $req->get("manEducation");
-        $manWork = $req->get("manWork");
-        $manEmploymentType = $req->get("manEmploymentType");
-        $manCitizenship = $req->get("manCitizenship");
+        $manFirstName = trim($req->get("manFirstName"));
+        $manSecondName = trim($req->get("manSecondName"));
+        $manLastName = trim($req->get("manLastName"));
+        $manEgn = trim($req->get("manEgn"));
+        $manPhone = trim($req->get("manPhone"));
+        $manEducation = trim($req->get("manEducation"));
+        $manWork = trim($req->get("manWork"));
+        $manEmploymentType = trim($req->get("manEmploymentType"));
+        $manCitizenship = trim($req->get("manCitizenship"));
 
-        $preferKidGender = $req->get("preferKidGender");
-        $preferKidMinAge = $req->get("preferKidMinAge");
-        $preferKidMaxAge = $req->get("preferKidMaxAge");
+        $preferKidGender = trim($req->get("preferKidGender"));
+        $preferKidMinAge = trim($req->get("preferKidMinAge"));
+        $preferKidMaxAge = trim($req->get("preferKidMaxAge"));
 
-        $regionId = $req->get("regionId");
-        $subRegionId = $req->get("subRegionId");
-        $cityId = $req->get("cityId");
-        $address = $req->get("address");
+        $regionId = trim($req->get("regionId"));
+        $subRegionId = trim($req->get("subRegionId"));
+        $cityId = trim($req->get("cityId"));
+        $address = trim($req->get("address"));
 
-        $language = $req->get("language");
-        $levelOfBulgarianLanguage = $req->get("levelOfBulgarianLanguage");
-        $religion = $req->get("religion");
+        $language = trim($req->get("language"));
+        $levelOfBulgarianLanguage = trim($req->get("levelOfBulgarianLanguage"));
+        $religion = trim($req->get("religion"));
 
-        $familyType = $req->get("familyType");
-        $averageMonthlyIncomePerFamilyMember = $req->get("averageMonthlyIncomePerFamilyMember");
-        $anotherIncome = $req->get("anotherIncome");
-        $houseType = $req->get("houseType");
+        $familyType = trim($req->get("familyType"));
+        $averageMonthlyIncomePerFamilyMember = trim($req->get("averageMonthlyIncomePerFamilyMember"));
+        $anotherIncome = trim($req->get("anotherIncome"));
+        $houseType = trim($req->get("houseType"));
 
-        $wardenId = $req->get("wardenId");
-
-        $womanIsEmpty = Validator::checkEmptyFields([$womanFirstName, $womanSecondName, $womanLastName, $womanEgn, $womanPhone, $womanEducation]);
-        $manIsEmpty = Validator::checkEmptyFields([$manFirstName, $manSecondName, $manLastName, $manEgn, $manPhone, $manEducation]);
-
-        if(Validator::checkEmptyFields([$titular, $regionId, $subRegionId, $cityId, $address]) || $womanIsEmpty && $manIsEmpty) {
-            return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
-        }
+        $wardenId = trim($req->get("wardenId"));
 
         if($preferKidMinAge == "") $preferKidMinAge = null;
         if($preferKidMaxAge == "") $preferKidMaxAge = null;
@@ -115,40 +109,6 @@ class FamilyController extends AbstractController {
 
         $family = new Family();
         $family->setTitular($titular);
-
-        if(!$womanIsEmpty) {
-            $woman = new FosterParent();
-            $woman->setFirstName($womanFirstName);
-            $woman->setSecondName($womanSecondName);
-            $woman->setLastName($womanLastName);
-            $woman->setEgn($womanEgn);
-            $woman->setPhone($womanPhone);
-            $woman->setEducation($womanEducation);
-            $woman->setWork($womanWork);
-            $woman->setEmploymentType($womanEmploymentType);
-            $woman->setCitizenship($womanCitizenship);
-
-            $family->setWoman($woman);
-        }
-
-        if(!$manIsEmpty) {
-            $man = new FosterParent();
-            $man->setFirstName($manFirstName);
-            $man->setSecondName($manSecondName);
-            $man->setLastName($manLastName);
-            $man->setEgn($manEgn);
-            $man->setPhone($manPhone);
-            $man->setEducation($manEducation);
-            $man->setWork($manWork);
-            $man->setEmploymentType($manEmploymentType);
-            $man->setCitizenship($manCitizenship);
-
-            $family->setMan($man);
-        }
-
-        $family->setPreferKidGender($preferKidGender);
-        $family->setPreferKidMinAge($preferKidMinAge);
-        $family->setPreferKidMaxAge($preferKidMaxAge);
 
         $region = $entityManager->getRepository(Region::class)->find($regionId);
         $family->setRegion($region);
@@ -161,6 +121,46 @@ class FamilyController extends AbstractController {
 
         $family->setAddress($address);
 
+        $woman = new FosterParent();
+        $woman->setFirstName($womanFirstName);
+        $woman->setSecondName($womanSecondName);
+        $woman->setLastName($womanLastName);
+        $woman->setEgn($womanEgn);
+        $woman->setPhone($womanPhone);
+        $woman->setEducation($womanEducation);
+        $woman->setWork($womanWork);
+        $woman->setEmploymentType($womanEmploymentType);
+        $woman->setCitizenship($womanCitizenship);
+        $woman->setGender("woman");
+        $woman->setRegion($region);
+        $woman->setSubRegion($subRegion);
+        $woman->setCity($city);
+        $woman->setAddress($address);
+
+        $family->setWoman($woman);
+
+        $man = new FosterParent();
+        $man->setFirstName($manFirstName);
+        $man->setSecondName($manSecondName);
+        $man->setLastName($manLastName);
+        $man->setEgn($manEgn);
+        $man->setPhone($manPhone);
+        $man->setEducation($manEducation);
+        $man->setWork($manWork);
+        $man->setEmploymentType($manEmploymentType);
+        $man->setCitizenship($manCitizenship);
+        $man->setGender("man");
+        $man->setRegion($region);
+        $man->setSubRegion($subRegion);
+        $man->setCity($city);
+        $man->setAddress($address);
+
+        $family->setMan($man);
+
+        $family->setPreferKidGender($preferKidGender);
+        $family->setPreferKidMinAge($preferKidMinAge);
+        $family->setPreferKidMaxAge($preferKidMaxAge);
+
         $family->setLanguage($language);
         $family->setLevelOfBulgarianLanguage($levelOfBulgarianLanguage);
         $family->setReligion($religion);
@@ -172,6 +172,11 @@ class FamilyController extends AbstractController {
 
         $warden = $entityManager->getRepository(EmployeeOEPG::class)->find($wardenId);
         $family->setWarden($warden);
+
+        $errors = $validator->validate($family);
+        if(count($errors) > 0) {
+            return new Response((string) $errors, Response::HTTP_BAD_REQUEST);
+        }
 
         $entityManager->persist($family);
         $entityManager->flush();
@@ -185,55 +190,55 @@ class FamilyController extends AbstractController {
      * @Route("/update/{id}", methods={"PUT"})
      * @IsGranted(Roles::ROLE_OEPG)
      */
-    public function update($id, Request $req, EntityManagerInterface $entityManager, SerializerInterface $serializer) {
-        $titular = $req->get("titular"); // "man" || "woman"
+    public function update($id, Request $req, EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator) {
+        $titular = trim($req->get("titular"));
 
-        $womanFirstName = $req->get("womanFirstName");
-        $womanSecondName = $req->get("womanSecondName");
-        $womanLastName = $req->get("womanLastName");
-        $womanEgn = $req->get("womanEgn");
-        $womanPhone = $req->get("womanPhone");
-        $womanEducation = $req->get("womanEducation");
-        $womanWork = $req->get("womanWork");
-        $womanEmploymentType = $req->get("womanEmploymentType");
-        $womanCitizenship = $req->get("womanCitizenship");
+        $womanFirstName = trim($req->get("womanFirstName"));
+        $womanSecondName = trim($req->get("womanSecondName"));
+        $womanLastName = trim($req->get("womanLastName"));
+        $womanEgn = trim($req->get("womanEgn"));
+        $womanPhone = trim($req->get("womanPhone"));
+        $womanEducation = trim($req->get("womanEducation"));
+        $womanWork = trim($req->get("womanWork"));
+        $womanEmploymentType = trim($req->get("womanEmploymentType"));
+        $womanCitizenship = trim($req->get("womanCitizenship"));
 
-        $manFirstName = $req->get("manFirstName");
-        $manSecondName = $req->get("manSecondName");
-        $manLastName = $req->get("manLastName");
-        $manEgn = $req->get("manEgn");
-        $manPhone = $req->get("manPhone");
-        $manEducation = $req->get("manEducation");
-        $manWork = $req->get("manWork");
-        $manEmploymentType = $req->get("manEmploymentType");
-        $manCitizenship = $req->get("manCitizenship");
+        $manFirstName = trim($req->get("manFirstName"));
+        $manSecondName = trim($req->get("manSecondName"));
+        $manLastName = trim($req->get("manLastName"));
+        $manEgn = trim($req->get("manEgn"));
+        $manPhone = trim($req->get("manPhone"));
+        $manEducation = trim($req->get("manEducation"));
+        $manWork = trim($req->get("manWork"));
+        $manEmploymentType = trim($req->get("manEmploymentType"));
+        $manCitizenship = trim($req->get("manCitizenship"));
 
-        $preferKidGender = $req->get("preferKidGender");
-        $preferKidMinAge = $req->get("preferKidMinAge");
-        $preferKidMaxAge = $req->get("preferKidMaxAge");
+        $preferKidGender = trim($req->get("preferKidGender"));
+        $preferKidMinAge = trim($req->get("preferKidMinAge"));
+        $preferKidMaxAge = trim($req->get("preferKidMaxAge"));
 
-        $regionId = $req->get("regionId");
-        $subRegionId = $req->get("subRegionId");
-        $cityId = $req->get("cityId");
-        $address = $req->get("address");
+        $regionId = trim($req->get("regionId"));
+        $subRegionId = trim($req->get("subRegionId"));
+        $cityId = trim($req->get("cityId"));
+        $address = trim($req->get("address"));
 
-        $language = $req->get("language");
-        $levelOfBulgarianLanguage = $req->get("levelOfBulgarianLanguage");
-        $religion = $req->get("religion");
+        $language = trim($req->get("language"));
+        $levelOfBulgarianLanguage = trim($req->get("levelOfBulgarianLanguage"));
+        $religion = trim($req->get("religion"));
 
-        $familyType = $req->get("familyType");
-        $averageMonthlyIncomePerFamilyMember = $req->get("averageMonthlyIncomePerFamilyMember");
-        $anotherIncome = $req->get("anotherIncome");
-        $houseType = $req->get("houseType");
+        $familyType = trim($req->get("familyType"));
+        $averageMonthlyIncomePerFamilyMember = trim($req->get("averageMonthlyIncomePerFamilyMember"));
+        $anotherIncome = trim($req->get("anotherIncome"));
+        $houseType = trim($req->get("houseType"));
 
-        $wardenId = $req->get("wardenId");
+        $wardenId = trim($req->get("wardenId"));
 
-        $womanIsEmpty = Validator::checkEmptyFields([$womanFirstName, $womanSecondName, $womanLastName, $womanEgn, $womanPhone, $womanEducation]);
-        $manIsEmpty = Validator::checkEmptyFields([$manFirstName, $manSecondName, $manLastName, $manEgn, $manPhone, $manEducation]);
-
-        if(Validator::checkEmptyFields([$titular, $regionId, $subRegionId, $cityId, $address]) || $womanIsEmpty && $manIsEmpty) {
-            return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
-        }
+//        $womanIsEmpty = Validator::checkEmptyFields([$womanFirstName, $womanSecondName, $womanLastName, $womanEgn, $womanPhone, $womanEducation]);
+//        $manIsEmpty = Validator::checkEmptyFields([$manFirstName, $manSecondName, $manLastName, $manEgn, $manPhone, $manEducation]);
+//
+//        if(Validator::checkEmptyFields([$titular, $regionId, $subRegionId, $cityId, $address]) || $womanIsEmpty && $manIsEmpty) {
+//            return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
+//        }
 
         if($preferKidMinAge == "") $preferKidMinAge = null;
         if($preferKidMaxAge == "") $preferKidMaxAge = null;
@@ -243,44 +248,6 @@ class FamilyController extends AbstractController {
         $family = $entityManager->getRepository(Family::class)->find($id);
 
         $family->setTitular($titular);
-
-        if(!$womanIsEmpty) {
-            $woman = new FosterParent();
-            $woman->setFirstName($womanFirstName);
-            $woman->setSecondName($womanSecondName);
-            $woman->setLastName($womanLastName);
-            $woman->setEgn($womanEgn);
-            $woman->setPhone($womanPhone);
-            $woman->setEducation($womanEducation);
-            $woman->setWork($womanWork);
-            $woman->setEmploymentType($womanEmploymentType);
-            $woman->setCitizenship($womanCitizenship);
-
-            $family->setWoman($woman);
-        } else {
-            $family->setWoman(null);
-        }
-
-        if(!$manIsEmpty) {
-            $man = new FosterParent();
-            $man->setFirstName($manFirstName);
-            $man->setSecondName($manSecondName);
-            $man->setLastName($manLastName);
-            $man->setEgn($manEgn);
-            $man->setPhone($manPhone);
-            $man->setEducation($manEducation);
-            $man->setWork($manWork);
-            $man->setEmploymentType($manEmploymentType);
-            $man->setCitizenship($manCitizenship);
-
-            $family->setMan($man);
-        } else {
-            $family->setMan(null);
-        }
-
-        $family->setPreferKidGender($preferKidGender);
-        $family->setPreferKidMinAge($preferKidMinAge);
-        $family->setPreferKidMaxAge($preferKidMaxAge);
 
         $region = $entityManager->getRepository(Region::class)->find($regionId);
         $family->setRegion($region);
@@ -293,6 +260,46 @@ class FamilyController extends AbstractController {
 
         $family->setAddress($address);
 
+        $woman = new FosterParent();
+        $woman->setFirstName($womanFirstName);
+        $woman->setSecondName($womanSecondName);
+        $woman->setLastName($womanLastName);
+        $woman->setEgn($womanEgn);
+        $woman->setPhone($womanPhone);
+        $woman->setEducation($womanEducation);
+        $woman->setWork($womanWork);
+        $woman->setEmploymentType($womanEmploymentType);
+        $woman->setCitizenship($womanCitizenship);
+        $woman->setGender("man");
+        $woman->setRegion($region);
+        $woman->setSubRegion($subRegion);
+        $woman->setCity($city);
+        $woman->setAddress($address);
+
+        $family->setWoman($woman);
+
+        $man = new FosterParent();
+        $man->setFirstName($manFirstName);
+        $man->setSecondName($manSecondName);
+        $man->setLastName($manLastName);
+        $man->setEgn($manEgn);
+        $man->setPhone($manPhone);
+        $man->setEducation($manEducation);
+        $man->setWork($manWork);
+        $man->setEmploymentType($manEmploymentType);
+        $man->setCitizenship($manCitizenship);
+        $man->setGender("man");
+        $man->setRegion($region);
+        $man->setSubRegion($subRegion);
+        $man->setCity($city);
+        $man->setAddress($address);
+
+        $family->setMan($man);
+
+        $family->setPreferKidGender($preferKidGender);
+        $family->setPreferKidMinAge($preferKidMinAge);
+        $family->setPreferKidMaxAge($preferKidMaxAge);
+
         $family->setLanguage($language);
         $family->setLevelOfBulgarianLanguage($levelOfBulgarianLanguage);
         $family->setReligion($religion);
@@ -304,6 +311,11 @@ class FamilyController extends AbstractController {
 
         $warden = $entityManager->getRepository(EmployeeOEPG::class)->find($wardenId);
         $family->setWarden($warden);
+
+        $errors = $validator->validate($family);
+        if(count($errors) > 0) {
+            return new Response((string) $errors, Response::HTTP_BAD_REQUEST);
+        }
 
         $entityManager->persist($family);
         $entityManager->flush();

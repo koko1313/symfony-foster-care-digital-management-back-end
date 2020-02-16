@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FamilyRepository")
@@ -22,31 +23,38 @@ class Family {
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\NotBlank()
+     * @Assert\Choice({"man", "woman"})
      */
     protected $titular;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\FosterParent", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @Assert\Valid
      */
     protected $woman;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\FosterParent", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @Assert\Valid
      */
     protected $man;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
+     * @Assert\Choice({"Момче", "Момиче", ""})
      */
     protected $preferKidGender;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Assert\Positive()
      */
     protected $preferKidMinAge;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Assert\Positive()
      */
     protected $preferKidMaxAge;
 
@@ -58,21 +66,25 @@ class Family {
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Region", inversedBy="families")
+     * @Assert\NotBlank()
      */
     protected $region;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\SubRegion", inversedBy="families")
+     * @Assert\NotBlank()
      */
     protected $subRegion;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\City", inversedBy="families")
+     * @Assert\NotBlank()
      */
     protected $city;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\NotBlank()
      */
     protected $address;
 
@@ -93,11 +105,13 @@ class Family {
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Choice({"Доброволно приемно семейство", "Професионално приемно семейство", ""})
      */
-    protected $familyType; // professional, volunteer
+    protected $familyType;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Assert\Positive()
      */
     protected $averageMonthlyIncomePerFamilyMember;
 
@@ -113,6 +127,7 @@ class Family {
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Assert\Positive()
      */
     protected $anotherIncome;
 
