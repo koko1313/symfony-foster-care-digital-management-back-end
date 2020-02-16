@@ -2,10 +2,7 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PositionRepository")
@@ -30,17 +27,6 @@ class Position
      */
     private $role;
 
-    /**
-     * @JMS\Exclude()
-     * @ORM\OneToMany(targetEntity="App\Entity\Employee", mappedBy="position")
-     */
-    private $employees;
-
-    public function __construct()
-    {
-        $this->employees = new ArrayCollection();
-    }
-
     public function getId() {
         return $this->id;
     }
@@ -62,34 +48,4 @@ class Position
         $this->role = $role;
     }
 
-    /**
-     * @return Collection|Employee[]
-     */
-    public function getEmployees(): Collection
-    {
-        return $this->employees;
-    }
-
-    public function addEmployee(Employee $employee): self
-    {
-        if (!$this->employees->contains($employee)) {
-            $this->employees[] = $employee;
-            $employee->setPosition($this);
-        }
-
-        return $this;
-    }
-
-    public function removeEmployee(Employee $employee): self
-    {
-        if ($this->employees->contains($employee)) {
-            $this->employees->removeElement($employee);
-            // set the owning side to null (unless already changed)
-            if ($employee->getPosition() === $this) {
-                $employee->setPosition(null);
-            }
-        }
-
-        return $this;
-    }
 }

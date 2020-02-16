@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\BaseEntities\Person;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -9,6 +10,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ORM\InheritanceType("JOINED")
+ * @ORM\DiscriminatorMap({
+ *     "administrator" = "Administrator",
+ *     "employeeOEPG" = "EmployeeOEPG"
+ * })
  */
 abstract class User extends Person implements UserInterface
 {

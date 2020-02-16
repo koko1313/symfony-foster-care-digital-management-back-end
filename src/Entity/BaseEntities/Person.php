@@ -1,26 +1,21 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\BaseEntities;
 
+use App\Entity\City;
+use App\Entity\Region;
+use App\Entity\SubRegion;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\PersonRepository")
- * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorMap({
- *     "administrator" = "Administrator",
- *     "user" = "User",
- *     "employeeOEPG" = "EmployeeOEPG",
- *     "familyMember" = "FamilyMember",
- *     "fosterParent" = "FosterParent"
- * })
+ * @ORM\MappedSuperclass()
  */
 abstract class Person
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="bigint", options={"unsigned" = true})
      */
     private $id;
 
@@ -60,17 +55,17 @@ abstract class Person
     private $birthDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Region", inversedBy="people")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Region")
      */
     private $region;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\SubRegion", inversedBy="people")
+     * @ORM\ManyToOne(targetEntity="App\Entity\SubRegion")
      */
     private $subRegion;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\City", inversedBy="people")
+     * @ORM\ManyToOne(targetEntity="App\Entity\City")
      */
     private $city;
 

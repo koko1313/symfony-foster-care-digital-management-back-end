@@ -39,12 +39,6 @@ class Region {
 
     /**
      * @JMS\Exclude()
-     * @ORM\OneToMany(targetEntity="App\Entity\Person", mappedBy="region")
-     */
-    private $people;
-
-    /**
-     * @JMS\Exclude()
      * @ORM\OneToMany(targetEntity="App\Entity\Family", mappedBy="region")
      */
     private $families;
@@ -52,7 +46,6 @@ class Region {
     public function __construct() {
         $this->subRegions = new ArrayCollection();
         $this->cities = new ArrayCollection();
-        $this->people = new ArrayCollection();
         $this->families = new ArrayCollection();
     }
 
@@ -116,37 +109,6 @@ class Region {
             // set the owning side to null (unless already changed)
             if ($city->getRegion() === $this) {
                 $city->setRegion(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Person[]
-     */
-    public function getPeople(): Collection
-    {
-        return $this->people;
-    }
-
-    public function addPerson(Person $person): self
-    {
-        if (!$this->people->contains($person)) {
-            $this->people[] = $person;
-            $person->setRegion($this);
-        }
-
-        return $this;
-    }
-
-    public function removePerson(Person $person): self
-    {
-        if ($this->people->contains($person)) {
-            $this->people->removeElement($person);
-            // set the owning side to null (unless already changed)
-            if ($person->getRegion() === $this) {
-                $person->setRegion(null);
             }
         }
 

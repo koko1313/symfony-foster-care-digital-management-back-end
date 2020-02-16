@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\BaseEntities;
 
+use App\Entity\Position;
+use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\EmployeeRepository")
+ * @ORM\MappedSuperclass()
  */
 abstract class Employee extends User
 {
