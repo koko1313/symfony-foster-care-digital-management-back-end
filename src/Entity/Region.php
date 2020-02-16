@@ -18,30 +18,30 @@ class Region {
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    protected $name;
 
     /**
      * @JMS\Exclude()
      * @ORM\OneToMany(targetEntity="App\Entity\SubRegion", mappedBy="region")
      */
-    private $subRegions;
+    protected $subRegions;
 
     /**
      * @JMS\Exclude()
      * @ORM\OneToMany(targetEntity="App\Entity\City", mappedBy="region")
      */
-    private $cities;
+    protected $cities;
 
     /**
      * @JMS\Exclude()
      * @ORM\OneToMany(targetEntity="App\Entity\Family", mappedBy="region")
      */
-    private $families;
+    protected $families;
 
     public function __construct() {
         $this->subRegions = new ArrayCollection();

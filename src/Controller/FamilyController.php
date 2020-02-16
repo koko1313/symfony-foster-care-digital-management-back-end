@@ -10,8 +10,6 @@ use App\Entity\Region;
 use App\Entity\SubRegion;
 use App\Helpers\Validator;
 use Doctrine\ORM\EntityManagerInterface;
-use Dompdf\Dompdf;
-use Dompdf\Options;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

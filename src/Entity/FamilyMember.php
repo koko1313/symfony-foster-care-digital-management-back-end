@@ -14,18 +14,18 @@ class FamilyMember extends Person
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $relation; // relation to parent (son, daughter, cousin, ...)
+    protected $relation; // relation to parent (son, daughter, cousin, ...)
 
     /**
      * @ORM\Column(type="text")
      */
-    private $note;
+    protected $note;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Family", inversedBy="familyMembers")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $family;
+    protected $family;
 
     public function getRelation(): ?string
     {

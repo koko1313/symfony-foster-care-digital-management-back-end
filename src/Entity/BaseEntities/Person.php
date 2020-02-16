@@ -6,6 +6,7 @@ use App\Entity\City;
 use App\Entity\Region;
 use App\Entity\SubRegion;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\MappedSuperclass()
@@ -17,82 +18,88 @@ abstract class Person
      * @ORM\GeneratedValue()
      * @ORM\Column(type="bigint", options={"unsigned" = true})
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string", length=10, nullable=true)
      */
-    private $egn;
+    protected $egn;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\NotBlank()
      */
-    private $firstName;
+    protected $firstName;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\NotBlank()
      */
-    private $secondName;
+    protected $secondName;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\NotBlank()
      */
-    private $lastName;
+    protected $lastName;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      */
-    private $phone;
+    protected $phone;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      */
-    private $gender;
+    protected $gender;
 
     /**
      * @ORM\Column(type="date", nullable=true)
      */
-    private $birthDate;
+    protected $birthDate;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Region")
+     * @Assert\NotBlank()
      */
-    private $region;
+    protected $region;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\SubRegion")
+     * @Assert\NotBlank()
      */
-    private $subRegion;
+    protected $subRegion;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\City")
+     * @Assert\NotBlank()
      */
-    private $city;
+    protected $city;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $address;
+    protected $address;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $education;
+    protected $education;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $work;
+    protected $work;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $employmentType;
+    protected $employmentType;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $citizenship;
+    protected $citizenship;
 
     public function getId(): ?int
     {

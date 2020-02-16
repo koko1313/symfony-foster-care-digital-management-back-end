@@ -18,109 +18,109 @@ class Family {
      * @ORM\GeneratedValue()
      * @ORM\Column(type="bigint", options={"unsigned" = true})
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string", length=50)
      */
-    private $titular;
+    protected $titular;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\FosterParent", cascade={"persist", "remove"}, orphanRemoval=true)
      */
-    private $woman;
+    protected $woman;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\FosterParent", cascade={"persist", "remove"}, orphanRemoval=true)
      */
-    private $man;
+    protected $man;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=true)
      */
-    private $preferKidGender;
+    protected $preferKidGender;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $preferKidMinAge;
+    protected $preferKidMinAge;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $preferKidMaxAge;
+    protected $preferKidMaxAge;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\EmployeeOEPG", inversedBy="families")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
-    private $warden;
+    protected $warden;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Region", inversedBy="families")
      */
-    private $region;
+    protected $region;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\SubRegion", inversedBy="families")
      */
-    private $subRegion;
+    protected $subRegion;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\City", inversedBy="families")
      */
-    private $city;
+    protected $city;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $address;
+    protected $address;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $language;
+    protected $language;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $levelOfBulgarianLanguage;
+    protected $levelOfBulgarianLanguage;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $religion;
+    protected $religion;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $familyType; // professional, volunteer
+    protected $familyType; // professional, volunteer
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $averageMonthlyIncomePerFamilyMember;
+    protected $averageMonthlyIncomePerFamilyMember;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $houseType;
+    protected $houseType;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $employmentType;
+    protected $employmentType;
 
     /**
      * @ORM\Column(type="float", nullable=true)
      */
-    private $anotherIncome;
+    protected $anotherIncome;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\FamilyMember", mappedBy="family")
      * @JMS\Exclude()
      */
-    private $familyMembers;
+    protected $familyMembers;
 
     public function __construct()
     {

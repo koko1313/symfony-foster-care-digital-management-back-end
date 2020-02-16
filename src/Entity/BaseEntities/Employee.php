@@ -13,9 +13,9 @@ abstract class Employee extends User
 {
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Position", inversedBy="employees")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Position")
      */
-    private $position;
+    protected $position;
 
     public function getPosition(): ?Position
     {

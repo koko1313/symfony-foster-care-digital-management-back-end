@@ -14,12 +14,12 @@ class Role {
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string", length=50)
      */
-    private $name;
+    protected $name;
 
     public function getId() {
         return $this->id;

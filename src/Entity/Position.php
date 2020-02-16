@@ -14,18 +14,18 @@ class Position
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string", length=50)
      */
-    private $name;
+    protected $name;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Role")
      * @ORM\JoinColumn(name="role_id", referencedColumnName="id")
      */
-    private $role;
+    protected $role;
 
     public function getId() {
         return $this->id;

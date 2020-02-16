@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Constants\Roles;
-use App\Helpers\Validator;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @Route("employee-oepg", name="employee-oepg_")
@@ -57,25 +57,20 @@ class EmployeeOEPGController extends UsersController {
      * @Route("/register", methods={"POST"})
      * @IsGranted(Roles::ROLE_ADMIN)
      */
-    public function register(Request $req, EntityManagerInterface $entityManager, SerializerInterface $serializer) {
-        $email = $req->get("email");
-        $password = $req->get("password");
-        $firstName = $req->get("firstName");
-        $secondName = $req->get("secondName");
-        $lastName = $req->get("lastName");
-        $regionId = $req->get("regionId");
-        $subRegionId = $req->get("subRegionId");
-        $cityId = $req->get("cityId");
-        $address = $req->get("address");
-
-        if(Validator::checkEmptyFields([$email, $password, $firstName, $secondName, $lastName, $regionId, $subRegionId, $cityId, $address])) {
-            return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
-        }
+    public function register(Request $req, EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator) {
+        $email = trim($req->get("email"));
+        $password = trim($req->get("password"));
+        $firstName = trim($req->get("firstName"));
+        $secondName = trim($req->get("secondName"));
+        $lastName = trim($req->get("lastName"));
+        $regionId = trim($req->get("regionId"));
+        $subRegionId = trim($req->get("subRegionId"));
+        $cityId = trim($req->get("cityId"));
 
         $userWithThisEmail = $entityManager->getRepository(User::class)->findOneBy(["email" => $email]);
 
         if($userWithThisEmail) {
-            return new Response(null, Response::HTTP_CONFLICT);
+            return new Response("The email is already taken.", Response::HTTP_CONFLICT);
         }
 
         $user = new EmployeeOEPG();
@@ -104,10 +99,12 @@ class EmployeeOEPGController extends UsersController {
         $city = $entityManager->getRepository(City::class)->findOneBy(["id" => $cityId]);
         $user->setCity($city);
 
-        $user->setAddress($address);
+        $errors = $validator->validate($user);
+        if(count($errors) > 0) {
+            return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
+        }
 
         $entityManager->persist($user);
-
         $entityManager->flush();
 
         $userJson = $serializer->serialize($user, 'json');
@@ -119,25 +116,20 @@ class EmployeeOEPGController extends UsersController {
      * @Route("/update/{id}", methods={"PUT"})
      * @IsGranted(Roles::ROLE_ADMIN)
      */
-    public function update($id, Request $req, EntityManagerInterface $entityManager, SerializerInterface $serializer) {
-        $userId = $id;
-        $email = $req->get("email");
-        $firstName = $req->get("firstName");
-        $secondName = $req->get("secondName");
-        $lastName = $req->get("lastName");
-        $regionId = $req->get("regionId");
-        $subRegionId = $req->get("subRegionId");
-        $cityId = $req->get("cityId");
-        $address = $req->get("address");
-
-        if(Validator::checkEmptyFields([$email, $firstName, $secondName, $lastName, $regionId, $subRegionId, $cityId, $address])) {
-            return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
-        }
+    public function update($id, Request $req, EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator) {
+        $userId = trim($id);
+        $email = trim($req->get("email"));
+        $firstName = trim($req->get("firstName"));
+        $secondName = trim($req->get("secondName"));
+        $lastName = trim($req->get("lastName"));
+        $regionId = trim($req->get("regionId"));
+        $subRegionId = trim($req->get("subRegionId"));
+        $cityId = trim($req->get("cityId"));
 
         $userWithThisEmail = $entityManager->getRepository(User::class)->findOneBy(["email" => $email]);
 
         if($userWithThisEmail && $userWithThisEmail->getId() != $id) {
-            return new Response(null, Response::HTTP_CONFLICT);
+            return new Response("The email is already taken.", Response::HTTP_CONFLICT);
         }
 
         $user = $entityManager->getRepository(EmployeeOEPG::class)->find($userId);
@@ -160,7 +152,10 @@ class EmployeeOEPGController extends UsersController {
         $city = $entityManager->getRepository(City::class)->find($cityId);
         $user->setCity($city);
 
-        $user->setAddress($address);
+        $errors = $validator->validate($user);
+        if(count($errors) > 0) {
+            return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
+        }
 
         $entityManager->flush();
 

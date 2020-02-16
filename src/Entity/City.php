@@ -17,30 +17,30 @@ class City
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    protected $name;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\SubRegion", inversedBy="cities")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $subRegion;
+    protected $subRegion;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Region", inversedBy="cities")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $region;
+    protected $region;
 
     /**
      * @JMS\Exclude()
      * @ORM\OneToMany(targetEntity="App\Entity\Family", mappedBy="city")
      */
-    private $families;
+    protected $families;
 
     public function __construct()
     {
