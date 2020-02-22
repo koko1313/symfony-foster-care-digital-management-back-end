@@ -121,11 +121,6 @@ class Family {
     protected $houseType;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    protected $employmentType;
-
-    /**
      * @ORM\Column(type="float", nullable=true)
      * @Assert\Positive()
      */
@@ -334,18 +329,6 @@ class Family {
     public function setHouseType(?string $houseType): self
     {
         $this->houseType = $houseType;
-
-        return $this;
-    }
-
-    public function getEmploymentType(): ?string
-    {
-        return $this->employmentType;
-    }
-
-    public function setEmploymentType(?string $employmentType): self
-    {
-        $this->employmentType = $employmentType;
 
         return $this;
     }
