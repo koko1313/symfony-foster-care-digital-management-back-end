@@ -24,6 +24,7 @@ class EmployeeOEPG extends Employee
     {
         parent::__construct();
         $this->families = new ArrayCollection();
+        $this->children = new ArrayCollection();
     }
 
     /**
@@ -51,6 +52,37 @@ class EmployeeOEPG extends Employee
             // set the owning side to null (unless already changed)
             if ($family->getWarden() === $this) {
                 $family->setWarden(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Child[]
+     */
+    public function getChildren(): Collection
+    {
+        return $this->children;
+    }
+
+    public function addChild(Child $child): self
+    {
+        if (!$this->children->contains($child)) {
+            $this->children[] = $child;
+            $child->setWarden($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChild(Child $child): self
+    {
+        if ($this->children->contains($child)) {
+            $this->children->removeElement($child);
+            // set the owning side to null (unless already changed)
+            if ($child->getWarden() === $this) {
+                $child->setWarden(null);
             }
         }
 

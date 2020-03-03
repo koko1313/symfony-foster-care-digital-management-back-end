@@ -395,7 +395,7 @@ class Family {
     {
         if (!$this->children->contains($child)) {
             $this->children[] = $child;
-            $child->setFamilyId($this);
+            $child->setFamily($this);
         }
 
         return $this;
@@ -406,8 +406,8 @@ class Family {
         if ($this->children->contains($child)) {
             $this->children->removeElement($child);
             // set the owning side to null (unless already changed)
-            if ($child->getFamilyId() === $this) {
-                $child->setFamilyId(null);
+            if ($child->getFamily() === $this) {
+                $child->setFamily(null);
             }
         }
 
