@@ -132,9 +132,16 @@ class Family {
      */
     protected $familyMembers;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Child", mappedBy="familyId")
+     * @JMS\Exclude()
+     */
+    private $children;
+
     public function __construct()
     {
         $this->familyMembers = new ArrayCollection();
+        $this->children = new ArrayCollection();
     }
 
     public function getId() {
@@ -370,6 +377,37 @@ class Family {
             // set the owning side to null (unless already changed)
             if ($familyMember->getFamily() === $this) {
                 $familyMember->setFamily(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Child[]
+     */
+    public function getChildren(): Collection
+    {
+        return $this->children;
+    }
+
+    public function addChild(Child $child): self
+    {
+        if (!$this->children->contains($child)) {
+            $this->children[] = $child;
+            $child->setFamilyId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChild(Child $child): self
+    {
+        if ($this->children->contains($child)) {
+            $this->children->removeElement($child);
+            // set the owning side to null (unless already changed)
+            if ($child->getFamilyId() === $this) {
+                $child->setFamilyId(null);
             }
         }
 
