@@ -133,8 +133,8 @@ class Family {
     protected $familyMembers;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Child", mappedBy="familyId")
-     * @JMS\Exclude()
+     * @ORM\OneToMany(targetEntity="App\Entity\Child", mappedBy="family")
+     * @JMS\MaxDepth(2)
      */
     private $children;
 
