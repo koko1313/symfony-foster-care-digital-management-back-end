@@ -71,6 +71,12 @@ class ChildrenController extends AbstractController {
 
         $wardenId = trim($req->get("wardenId"));
 
+        $childWithThisEgn = $entityManager->getRepository(Child::class)->findOneBy(["egn" => $egn]);
+
+        if($childWithThisEgn) {
+            return new Response("Child with this EGN already exist.", Response::HTTP_CONFLICT);
+        }
+
         $child = new Child();
 
         $child->setFirstName($firstName);
@@ -112,7 +118,57 @@ class ChildrenController extends AbstractController {
      * @IsGranted(Roles::ROLE_OEPG)
      */
     public function update($id, Request $req, EntityManagerInterface $entityManager, SerializerInterface $serializer, ValidatorInterface $validator) {
-        // TODO
+        $firstName = trim($req->get("firstName"));
+        $secondName = trim($req->get("secondName"));
+        $lastName = trim($req->get("lastName"));
+        $egn = trim($req->get("egn"));
+        $gender = trim($req->get("gender"));
+
+        $regionId = trim($req->get("regionId"));
+        $subRegionId = trim($req->get("subRegionId"));
+        $cityId = trim($req->get("cityId"));
+        $address = trim($req->get("address"));
+
+        $wardenId = trim($req->get("wardenId"));
+
+        $childWithThisEgn = $entityManager->getRepository(Child::class)->findOneBy(["egn" => $egn]);
+
+        if($childWithThisEgn && $childWithThisEgn->getId() != $id) {
+            return new Response("Child with this EGN already exist.", Response::HTTP_CONFLICT);
+        }
+
+        $child = $entityManager->getRepository(Child::class)->find($id);
+
+        if(!$child) {
+            return new Response(null, Response::HTTP_NOT_FOUND);
+        }
+
+        $child->setFirstName($firstName);
+        $child->setSecondName($secondName);
+        $child->setLastName($lastName);
+        $child->setEgn($egn);
+        $child->setGender($gender);
+        $child->setAddress($address);
+
+        $region = $entityManager->getRepository(Region::class)->find($regionId);
+        $child->setRegion($region);
+
+        $subRegion = $entityManager->getRepository(SubRegion::class)->find($subRegionId);
+        $child->setSubRegion($subRegion);
+
+        $city = $entityManager->getRepository(City::class)->find($cityId);
+        $child->setCity($city);
+
+        $errors = $validator->validate($child);
+        if(count($errors) > 0) {
+            return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
+        }
+
+        $entityManager->flush();
+
+        $childJson = $serializer->serialize($child, 'json');
+
+        return new Response($childJson);
     }
 
 
