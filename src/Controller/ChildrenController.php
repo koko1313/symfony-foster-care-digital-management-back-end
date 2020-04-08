@@ -159,6 +159,9 @@ class ChildrenController extends AbstractController {
         $city = $entityManager->getRepository(City::class)->find($cityId);
         $child->setCity($city);
 
+        $warden = $entityManager->getRepository(EmployeeOEPG::class)->find($wardenId);
+        $child->setWarden($warden);
+
         $errors = $validator->validate($child);
         if(count($errors) > 0) {
             return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
