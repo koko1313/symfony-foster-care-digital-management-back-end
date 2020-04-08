@@ -5,6 +5,7 @@ jms_serializer:
     default_context:
         serialization:
             serialize_null: true
+            enable_max_depth_checks: true
 #    metadata:
 #        auto_detection: false
 #        directories:
