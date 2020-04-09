@@ -80,13 +80,40 @@ class FamilyController extends AbstractController {
         $entityManager->persist($family);
         $entityManager->flush();
 
-        $childJson = $serializer->serialize($child, 'json');
+        $familyJson = $serializer->serialize($family, 'json');
 
-        return new Response($childJson, Response::HTTP_OK);
+        return new Response($familyJson, Response::HTTP_OK);
     }
 
 
-    // TODO - remove child
+    /**
+     * @Route("/{familyId}/remove_child", methods={"POST"})
+     * @IsGranted(Roles::ROLE_OEPG)
+     */
+    public function removeChild($familyId, Request $req, EntityManagerInterface $entityManager, SerializerInterface $serializer) {
+        $childId = $req->get("childId");
+
+        $family = $entityManager->getRepository(Family::class)->find($familyId);
+
+        if(!$family) {
+            return new Response("Family not found", Response::HTTP_NOT_FOUND);
+        }
+
+        $child = $entityManager->getRepository(Child::class)->find($childId);
+
+        if(!$child) {
+            return new Response("Child not found.", Response::HTTP_NOT_FOUND);
+        }
+
+        $family->removeChild($child);
+
+        $entityManager->persist($family);
+        $entityManager->flush();
+
+        $familyJson = $serializer->serialize($family, 'json');
+
+        return new Response($familyJson, Response::HTTP_OK);
+    }
 
 
     /**
