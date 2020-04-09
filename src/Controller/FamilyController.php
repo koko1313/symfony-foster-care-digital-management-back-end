@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Child;
 use App\Entity\City;
 use App\Entity\EmployeeOEPG;
 use App\Entity\Family;
@@ -53,6 +54,39 @@ class FamilyController extends AbstractController {
 
         return new Response($familyJson);
     }
+
+
+    /**
+     * @Route("/{familyId}/add_child", methods={"POST"})
+     * @IsGranted(Roles::ROLE_OEPG)
+     */
+    public function addChild($familyId, Request $req, EntityManagerInterface $entityManager, SerializerInterface $serializer) {
+        $childId = $req->get("childId");
+
+        $family = $entityManager->getRepository(Family::class)->find($familyId);
+
+        if(!$family) {
+            return new Response("Family not found.", Response::HTTP_NOT_FOUND);
+        }
+
+        $child = $entityManager->getRepository(Child::class)->find($childId);
+
+        if(!$child) {
+            return new Response("Child not found.", Response::HTTP_NOT_FOUND);
+        }
+
+        $family->addChild($child);
+
+        $entityManager->persist($family);
+        $entityManager->flush();
+
+        $childJson = $serializer->serialize($child, 'json');
+
+        return new Response($childJson, Response::HTTP_OK);
+    }
+
+
+    // TODO - remove child
 
 
     /**
