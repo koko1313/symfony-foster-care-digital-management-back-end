@@ -186,6 +186,7 @@ class FamilyController extends AbstractController {
         return new Response($familyJson);
     }
 
+
     /**
      * @Route("/update/{id}", methods={"PUT"})
      * @IsGranted(Roles::ROLE_OEPG)
@@ -324,6 +325,7 @@ class FamilyController extends AbstractController {
 
         return new Response($familyJson);
     }
+
 
     /**
      * @Route("/delete/{id}", methods={"DELETE"})
