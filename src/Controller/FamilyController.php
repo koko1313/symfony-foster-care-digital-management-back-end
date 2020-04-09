@@ -268,13 +268,6 @@ class FamilyController extends AbstractController {
 
         $wardenId = trim($req->get("wardenId"));
 
-//        $womanIsEmpty = Validator::checkEmptyFields([$womanFirstName, $womanSecondName, $womanLastName, $womanEgn, $womanPhone, $womanEducation]);
-//        $manIsEmpty = Validator::checkEmptyFields([$manFirstName, $manSecondName, $manLastName, $manEgn, $manPhone, $manEducation]);
-//
-//        if(Validator::checkEmptyFields([$titular, $regionId, $subRegionId, $cityId, $address]) || $womanIsEmpty && $manIsEmpty) {
-//            return new Response("All fields are required.", Response::HTTP_BAD_REQUEST);
-//        }
-
         if($preferKidMinAge == "") $preferKidMinAge = null;
         if($preferKidMaxAge == "") $preferKidMaxAge = null;
         if($averageMonthlyIncomePerFamilyMember == "") $averageMonthlyIncomePerFamilyMember = null;
