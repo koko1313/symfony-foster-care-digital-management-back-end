@@ -32,6 +32,19 @@ class ChildRepository extends ServiceEntityRepository
     }
 
     /**
+     * Find all free (with no family) children, belong to warden id
+     */
+    public function findAllFreeBelongToWarden($wardenId) {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.warden = :val')
+            ->andWhere('c.family is NULL')
+            ->setParameter('val', $wardenId)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
      * Find a child, belong to warden id
      */
     public function findByIdBelongToWarden($id, $wardenId) {

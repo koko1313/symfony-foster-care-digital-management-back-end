@@ -37,6 +37,19 @@ class ChildrenController extends AbstractController {
 
 
     /**
+     * @Route("/all-free", methods={"GET"})
+     * @IsGranted(Roles::ROLE_OEPG)
+     */
+    public function getAllFree(SerializerInterface $serializer, EntityManagerInterface $entityManager, UserInterface $user = null) {
+        $allChildren = $entityManager->getRepository(Child::class)->findAllFreeBelongToWarden($user->getId());
+
+        $allChildrenJson = $serializer->serialize($allChildren, 'json');
+
+        return new Response($allChildrenJson);
+    }
+
+
+    /**
      * @Route("/{id}", methods={"GET"})
      * @IsGranted(Roles::ROLE_OEPG)
      */
