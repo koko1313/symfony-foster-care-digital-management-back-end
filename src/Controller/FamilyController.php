@@ -79,9 +79,9 @@ class FamilyController extends AbstractController {
         $entityManager->persist($family);
         $entityManager->flush();
 
-        $familyJson = $serializer->serialize($family, 'json');
+        $childJson = $serializer->serialize($child, 'json');
 
-        return new Response($familyJson, Response::HTTP_OK);
+        return new Response($childJson, Response::HTTP_OK);
     }
 
 
@@ -109,9 +109,9 @@ class FamilyController extends AbstractController {
         $entityManager->persist($family);
         $entityManager->flush();
 
-        $familyJson = $serializer->serialize($family, 'json');
+        $childJson = $serializer->serialize($child, 'json');
 
-        return new Response($familyJson, Response::HTTP_OK);
+        return new Response($childJson, Response::HTTP_OK);
     }
 
 
