@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Child;
 use App\Entity\City;
 use App\Entity\EmployeeOEPG;
+use App\Entity\Family;
 use App\Entity\Region;
 use App\Entity\SubRegion;
 use Doctrine\ORM\EntityManagerInterface;
@@ -76,6 +77,7 @@ class ChildrenController extends AbstractController {
         $lastName = trim($req->get("lastName"));
         $egn = trim($req->get("egn"));
         $gender = trim($req->get("gender"));
+        $familyId = trim($req->get("familyId"));
 
         $regionId = trim($req->get("regionId"));
         $subRegionId = trim($req->get("subRegionId"));
@@ -97,6 +99,9 @@ class ChildrenController extends AbstractController {
         $child->setLastName($lastName);
         $child->setEgn($egn);
         $child->setGender($gender);
+
+        $family = $entityManager->getRepository(Family::class)->find($familyId);
+        $child->setFamily($family);
 
         $region = $entityManager->getRepository(Region::class)->find($regionId);
         $child->setRegion($region);
@@ -136,6 +141,7 @@ class ChildrenController extends AbstractController {
         $lastName = trim($req->get("lastName"));
         $egn = trim($req->get("egn"));
         $gender = trim($req->get("gender"));
+        $familyId = trim($req->get("familyId"));
 
         $regionId = trim($req->get("regionId"));
         $subRegionId = trim($req->get("subRegionId"));
@@ -162,6 +168,9 @@ class ChildrenController extends AbstractController {
         $child->setEgn($egn);
         $child->setGender($gender);
         $child->setAddress($address);
+
+        $family = $entityManager->getRepository(Family::class)->find($familyId);
+        $child->setFamily($family);
 
         $region = $entityManager->getRepository(Region::class)->find($regionId);
         $child->setRegion($region);
