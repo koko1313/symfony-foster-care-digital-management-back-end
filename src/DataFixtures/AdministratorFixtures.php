@@ -21,6 +21,7 @@ class AdministratorFixtures extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager) {
         $user = new Administrator();
+        $user->setFirstName("Administrator");
         $user->setEmail("admin@admin.com");
 
         $password = $this->encoder->encodePassword($user, "pass");
