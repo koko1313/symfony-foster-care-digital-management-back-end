@@ -38,6 +38,16 @@
 До момента няма изградена подобна система и цялата административна работа се изпълнява посредством хартиени документи, които отделните звена си споделят чрез сканиране и изпращане под формата на e-mail съобщения.
 
 
+### Как се инсталира
+1. `composer install`
+2. `create the database (name: foster-care)`
+3.  ```
+    php bin/console doctrine:migrations:migrate
+    php bin/console doctrine:fixtures:load
+    symfony serve
+    ```
+
+
 ### Used packages
 - [cors-bundle](https://packagist.org/packages/nelmio/cors-bundle)
 - [dompdf](https://packagist.org/packages/dompdf/dompdf)
